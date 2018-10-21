@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TrackLapTime</string>
+    <string name="start">START</string>
+    <string name="baza_danych">BAZA DANYCH</string>
+    <string name="wyjscie">WYJŚCIE</string>
+    <string name="lap">Lap: 1</string>
+    <string name="powr_t">Powrót</string>
+    <string name="click">Click!</string>
+    <string name="stop">Stop</string>
+</resources>
