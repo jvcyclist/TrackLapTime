@@ -1,5 +1,6 @@
 package com.karas.tracklaptime;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -10,10 +11,14 @@ import android.view.KeyEvent.Callback;
 import android.view.View;
 
 import android.widget.Button;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -21,20 +26,19 @@ public class MainActivity extends AppCompatActivity{
 
 
     static int counter=0;
-    TextView fullTime,lapTime,numOfLap ;
-
+    TextView fullTime,lapTime,numOfLap,test;
     Button start, pause, reset ,nextlap;
-
+    String timeR,res;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime,MillisecondTime2,StartTime2,TimeBuff2,UpdateTime2 = 0L ;
 
     Handler handler,handler2;
 
-    int Seconds, Minutes, MilliSeconds,Lap=1 ;
+    int Seconds, Minutes, MilliSeconds,Lap=0 ;
     int Seconds2,Minutes2,MilliSeconds2;
-
+    int numofClick=0;
     ArrayAdapter<String> adapter ;
 
-
+    List<String> list = new LinkedList<String>();
 
 
     @Override
@@ -46,24 +50,34 @@ public class MainActivity extends AppCompatActivity{
         fullTime = (TextView)findViewById(R.id.fullTime);
         lapTime = (TextView)findViewById(R.id.lapTime);
         numOfLap = (TextView)findViewById(R.id.numOfLap);
+        test = (TextView) findViewById(R.id.test);
+        test.setVisibility(View.INVISIBLE);
+
         start = (Button)findViewById(R.id.startbtn);
         pause = (Button)findViewById(R.id.stopbtn);
         reset = (Button)findViewById(R.id.resetbtn);
         nextlap = (Button)findViewById(R.id.nextLap);
+
+
+
+
         nextlap.setVisibility(View.INVISIBLE);
+        start.setVisibility(View.INVISIBLE);
+        pause.setVisibility(View.INVISIBLE);
+        reset.setVisibility(View.INVISIBLE);
 
         handler = new Handler() ;
         handler2 = new Handler();
 
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                list.clear();
                 StartTime = SystemClock.uptimeMillis();
                 StartTime2 = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
-
+                test.setVisibility(View.INVISIBLE);
                 reset.setEnabled(false);
                 nextlap.setEnabled(true);
             }
@@ -93,7 +107,7 @@ public class MainActivity extends AppCompatActivity{
                 Seconds = 0 ;
                 Minutes = 0 ;
                 MilliSeconds = 0 ;
-                Lap=1;
+                Lap=0;
 
                 MillisecondTime2 = 0L ;
                 StartTime2 = 0L ;
@@ -101,18 +115,18 @@ public class MainActivity extends AppCompatActivity{
                 UpdateTime2 = 0L ;
                 Seconds2 = 0 ;
                 Minutes2 = 0 ;
-
+                numofClick=0;
 
 
                 nextlap.setEnabled(false);
 
 
                 fullTime.setText("00:00:00");
-                lapTime.setText("0.00");
+                lapTime.setText("0.0");
                 numOfLap.setText("Lap: "+Integer.toString(Lap));
+                test.setVisibility(View.VISIBLE);
 
-
-        }
+            }
         });
 
 
@@ -122,9 +136,9 @@ public class MainActivity extends AppCompatActivity{
             Lap = Lap + 1;
             numOfLap.setText("Lap: "+Integer.toString(Lap));
 
+                numofClick++;
 
-
-
+                if(numofClick==1){start.performClick();}
 
                 UpdateTime2=SystemClock.uptimeMillis()-StartTime2;
 
@@ -138,14 +152,29 @@ public class MainActivity extends AppCompatActivity{
 
                 if(Seconds2<15){lapTime.setTextColor(Color.rgb( 92, 254, 0));}
                 if(Seconds2>15){lapTime.setTextColor(Color.rgb( 255, 0, 4));}
+                if(Seconds2<=2){numofClick++;} else{numofClick=1;}
+                if(numofClick==3){pause.performClick();reset.performClick();lapTime.setText("0.0");}
+                else{
 
                 lapTime.setText(""
                         + String.format("%01d", Seconds2) + "."
                         + String.format("%01d", MilliSeconds2/100));
+
+                timeR= Integer.toString(Lap-1)+"..."+String.format("%01d", Seconds2) + "." + String.format("%01d", MilliSeconds2/100);
+                if(Lap>1) {
+                    list.add(timeR);
+
+                    test.setText(list.toString());
+                }
+
+
+
+
+
+                }
                 StartTime2=SystemClock.uptimeMillis();
             }
         });
-
 
     }
 
@@ -157,9 +186,8 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }*/
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            start.setText("Counter : " + String.valueOf(--counter));
-            Toast.makeText(this, "Volume Up Pressed", Toast.LENGTH_SHORT)
-                    .show();
+            start.setText(String.valueOf(numofClick));
+
             nextlap.performClick();
             return true;
         }
@@ -168,10 +196,6 @@ public class MainActivity extends AppCompatActivity{
             return super.onKeyDown(keyCode, event);
         }
     }
-
-
-
-
 
 
     public Runnable runnable = new Runnable() {
@@ -194,10 +218,6 @@ public class MainActivity extends AppCompatActivity{
             fullTime.setText("" + Minutes + "."
                     + String.format("%02d", Seconds) + "."
                     + String.format("%03d", MilliSeconds));
-
-
-
-
 
             handler.postDelayed(this, 0);
         }

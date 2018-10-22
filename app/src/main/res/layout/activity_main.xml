@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+    android:screenOrientation="landscape"
     >
 
     <TextView
@@ -35,24 +36,24 @@
 
     <TextView
         android:id="@+id/lapTime"
-        android:layout_width="797dp"
-        android:layout_height="497dp"
+        android:layout_width="1043dp"
+        android:layout_height="640dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center"
-        android:text="00.0"
+        android:text="0.0"
         android:textColor="#FFFFFF"
-        android:textSize="350sp"
+        android:textSize="450sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.471"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.303" />
+        app:layout_constraintVertical_bias="0.846" />
 
     <Button
         android:id="@+id/startbtn"
@@ -101,4 +102,18 @@
         android:clickable = "false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numOfLap" />
+
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="985dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="96dp"
+        android:background="@color/colorAccent"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
