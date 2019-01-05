@@ -7,4 +7,9 @@
     <string name="powr_t">Powrót</string>
     <string name="click">Click!</string>
     <string name="stop">Stop</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_start">StartActivity</string>
+    <string name="title_activity_run">RunActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
