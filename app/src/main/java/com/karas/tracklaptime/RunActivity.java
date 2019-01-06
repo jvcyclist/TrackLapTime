@@ -18,60 +18,64 @@ import android.widget.TextView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class RunActivity extends AppCompatActivity{
 
-
-
+    DatabaseHelper myDb;
     static int counter=0;
     TextView fullTime,lapTime,numOfLap,test;
     Button start, pause, reset ,nextlap,noButton,yesButton;
     String timeR,res;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime,MillisecondTime2,StartTime2,TimeBuff2,UpdateTime2 = 0L ;
-
+    String lastFullTime;
     Handler handler,handler2;
 
-    int Seconds, Minutes, MilliSeconds,Lap=0 ;
+    int Seconds, Minutes, MilliSeconds,Lap=0,lastLap ;
     int Seconds2,Minutes2,MilliSeconds2;
     int numofClick=0;
     ArrayAdapter<String> adapter ;
 
     List<String> list = new LinkedList<String>();
-
-
+    DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+    String date;
+    TextView quest_textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
 
-
+        myDb = new DatabaseHelper(this);
         fullTime = (TextView)findViewById(R.id.fullTime);
         lapTime = (TextView)findViewById(R.id.lapTime);
         numOfLap = (TextView)findViewById(R.id.numOfLap);
         test = (TextView) findViewById(R.id.test);
         test.setVisibility(View.INVISIBLE);
-
+        date= df.format(Calendar.getInstance().getTime());
         start = (Button)findViewById(R.id.startbtn);
         pause = (Button)findViewById(R.id.stopbtn);
         reset = (Button)findViewById(R.id.resetbtn);
         nextlap = (Button)findViewById(R.id.nextLap);
 
         noButton = (Button)findViewById(R.id.run_no_button);
-       yesButton = (Button)findViewById(R.id.run_yes_button);
-
+        yesButton = (Button)findViewById(R.id.run_yes_button);
+        quest_textView=findViewById(R.id.quest_textView);
         nextlap.setVisibility(View.INVISIBLE);
         start.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
         reset.setVisibility(View.INVISIBLE);
         yesButton.setVisibility(View.INVISIBLE);
         noButton.setVisibility(View.INVISIBLE);
-
+        quest_textView.setVisibility(View.INVISIBLE);
         handler = new Handler() ;
         handler2 = new Handler();
-
+        AddData();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +116,7 @@ public class RunActivity extends AppCompatActivity{
                 Seconds = 0 ;
                 Minutes = 0 ;
                 MilliSeconds = 0 ;
+                lastLap=Lap;
                 Lap=0;
 
                 MillisecondTime2 = 0L ;
@@ -122,20 +127,18 @@ public class RunActivity extends AppCompatActivity{
                 Minutes2 = 0 ;
                 numofClick=0;
 
-
                 nextlap.setEnabled(false);
-
-
+                lastFullTime=fullTime.getText().toString();
                 fullTime.setText("00:00:00");
                 lapTime.setText("0.0");
                 numOfLap.setText("Lap: "+Integer.toString(Lap));
                 test.setVisibility(View.VISIBLE);
                 yesButton.setVisibility(View.VISIBLE);
                 noButton.setVisibility(View.VISIBLE);
+                quest_textView.setVisibility(View.VISIBLE);
 
             }
         });
-
 
         nextlap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +170,7 @@ public class RunActivity extends AppCompatActivity{
                             + String.format("%01d", Seconds2) + "."
                             + String.format("%01d", MilliSeconds2/100));
 
-                    timeR= Integer.toString(Lap-1)+"..."+String.format("%01d", Seconds2) + "." + String.format("%01d", MilliSeconds2/100);
+                    timeR= "("+Integer.toString(Lap-1)+")-{"+String.format("%01d", Seconds2) + "." + String.format("%01d", MilliSeconds2/100)+"}";
                     if(Lap>1) {
                         list.add(timeR);
 
@@ -180,14 +183,7 @@ public class RunActivity extends AppCompatActivity{
         });
 
 
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(i);
 
-            }
-        });
 
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,6 +194,26 @@ public class RunActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    public  void AddData() {
+        yesButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isInserted = myDb.insertData(date,
+                                Integer.toString(lastLap-2), lastFullTime,
+                                test.getText().toString() );
+                        if(isInserted == true)
+                            Toast.makeText(RunActivity.this,"Data Inserted",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(RunActivity.this,"Data not Inserted",Toast.LENGTH_LONG).show();
+
+                        Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(i);
+                    }
+                }
+        );
 
     }
 

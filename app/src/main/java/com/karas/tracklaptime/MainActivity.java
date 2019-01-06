@@ -11,6 +11,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button databaseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +28,9 @@ public class MainActivity extends AppCompatActivity {
                 myIntent = new Intent(MainActivity.this,StartActivity.class);
                 MainActivity.this.startActivity(myIntent);
 
-
             }
         });
-
-
+        databaseButton = findViewById(R.id.database_button);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,9 +40,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        databaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this,DatabaseActivity.class);
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
+
 
 
     }
-
 
 }
