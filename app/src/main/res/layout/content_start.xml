@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:id="@+id/back_button"
-        android:layout_width="1264dp"
+        android:layout_width="949dp"
         android:layout_height="672dp"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="8dp"

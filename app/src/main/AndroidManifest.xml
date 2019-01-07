@@ -31,7 +31,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="Track Lap Time - MENU"
+            android:label="Track Lap Time"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

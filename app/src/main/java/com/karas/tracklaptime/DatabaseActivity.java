@@ -1,45 +1,67 @@
 package com.karas.tracklaptime;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DatabaseActivity extends AppCompatActivity {
     DatabaseHelper myDb;
 
     TableLayout tableLayout;
+    Button backDatabaseButton;
+    Button deleteDatabaseButton;
 
+    Button deleteRow;
+    EditText IdText;
+    TextView textView;
+
+    int i=1;
     private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context=this;
         setContentView(R.layout.activity_database);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         myDb = new DatabaseHelper(this);
 
+        backDatabaseButton = findViewById(R.id.database_back_button);
+
+        deleteDatabaseButton= findViewById(R.id.dataase_delete_button);
+
+        IdText = findViewById(R.id.Idtext);
+
+        textView = findViewById(R.id.textView);
+
         tableLayout = findViewById(R.id.tablelayout);
+
         TableRow rowHeader = new TableRow(context);
         rowHeader.setBackgroundColor(Color.parseColor("#c0c0c0"));
         rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
-        String[] headerText={"ID","DATE","COUNT","FULL TIME","TIMES"};
+        String[] headerText={"ID","DATA","ILOŚĆ OKR.","CZAS","CZASY"};
         for(String c:headerText) {
             TextView tv = new TextView(this);
             tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
@@ -64,17 +86,16 @@ public class DatabaseActivity extends AppCompatActivity {
                 String FULL_TIME = res.getString(res.getColumnIndex("FULL_TIME"));
                 String TIMES = res.getString(res.getColumnIndex("TIMES"));
 
-
-
-
-                // dara rows
+                // data rows
                 TableRow row = new TableRow(context);
                 row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
                 String[] colText={ID+"",DATE,COUNT,FULL_TIME,TIMES};
                 for(String text:colText) {
                     TextView tv = new TextView(context);
-                    tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                    if(i==1){row.setBackgroundColor(Color.WHITE);i=-i;}
+                    else{row.setBackgroundColor(Color.LTGRAY);i=-i;}
+                                        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                             TableRow.LayoutParams.WRAP_CONTENT));
                     tv.setGravity(Gravity.CENTER);
                     tv.setTextSize(16);
@@ -88,54 +109,45 @@ public class DatabaseActivity extends AppCompatActivity {
 
         }
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        backDatabaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(i);
             }
         });
 
-     /*   viewAll();
-        showAll.performClick();*/
+        deleteDatabaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer deletedRows = myDb.deleteData(IdText.getText().toString());
+                if(deletedRows > 0)
+                {Toast.makeText(DatabaseActivity.this,"Data Deleted",Toast.LENGTH_LONG).show();finish();
+                    startActivity(getIntent());}
+                else
+                {Toast.makeText(DatabaseActivity.this,"Data not Deleted",Toast.LENGTH_LONG).show();}
+            }
+        });
+
     }
 
-
-
-    /*public void viewAll() {
-        showAll.setOnClickListener(
+    public void DeleteData() {
+        deleteDatabaseButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                       *//* if(res.getCount() == 0) {
-                            // show message
-                            showMessage("Error","Nothing found");
-                            return;
+                        Integer deletedRows= myDb.deleteData(IdText.getText().toString());
+                        if(deletedRows > 0){
+                            Toast.makeText(DatabaseActivity.this,"Data Deleted",Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(getApplicationContext(),DatabaseActivity.class);
+                            startActivity(i);
                         }
-
-                        StringBuffer buffer = new StringBuffer();
-                        while (res.moveToNext()) {
-                            buffer.append("Id: "+ res.getString(0)+"\n");
-                            buffer.append("Data: "+ res.getString(1)+"\n");
-                            buffer.append("Ilość okr.: "+ res.getString(2)+"\n");
-                            buffer.append("Czas: "+ res.getString(3)+"\n\n");
-                            buffer.append("Czasy: "+ res.getString(4)+"\n\n");
-                        }*//*
-
-
-
-
-
-                       *//* // Show all data
-                        showMessage("Data",buffer.toString());*//*
+                        else{
+                            Toast.makeText(DatabaseActivity.this,"Data not Deleted",Toast.LENGTH_LONG).show();}
                     }
                 }
         );
-    }*/
-
+    }
 
     public void showMessage(String title,String Message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -144,8 +156,5 @@ public class DatabaseActivity extends AppCompatActivity {
         builder.setMessage(Message);
         builder.show();
     }
-
-
-
 
 }

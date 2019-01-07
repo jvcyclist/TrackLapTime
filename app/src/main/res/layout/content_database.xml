@@ -10,12 +10,92 @@
     tools:showIn="@layout/activity_database">
 
 
-    <TableLayout
-        android:id="@+id/tablelayout"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <ScrollView
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="424dp"
+            android:layout_marginTop="5dip"
+            android:fillViewport="true"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="horizontal|vertical">
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dip"
+                android:scrollbars="horizontal|vertical">
+
+                <TableLayout
+                    android:id="@+id/tablelayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:shrinkColumns="4"
+                    android2:id="@+id/jhhgjggj"
+                    android2:layout_height="1000dp"
+                    android2:layout_width="500dp"
+                    android2:stretchColumns="*"></TableLayout>
+            </HorizontalScrollView>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/Idtext"
+        android:layout_width="54dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dataase_delete_button"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="42dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="468dp"
+        android:layout_marginLeft="468dp"
+        android:layout_marginBottom="8dp"
+        android:text="ID: "
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/database_back_button" />
+
+    <Button
+        android:id="@+id/database_back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android2:id="@+id/jhhgjggj"
-        android2:layout_height="1000dp"
-        android2:layout_width="500dp"
-        android2:stretchColumns="*"></TableLayout>
+        android:layout_marginStart="76dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginBottom="8dp"
+        android:text="POWRÓT"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/dataase_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="8dp"
+        android:text="USUŃ POZYCJĘ"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

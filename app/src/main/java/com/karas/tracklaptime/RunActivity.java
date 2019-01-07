@@ -108,7 +108,6 @@ public class RunActivity extends AppCompatActivity{
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 MillisecondTime = 0L ;
                 StartTime = 0L ;
                 TimeBuff = 0L ;
@@ -131,6 +130,7 @@ public class RunActivity extends AppCompatActivity{
                 lastFullTime=fullTime.getText().toString();
                 fullTime.setText("00:00:00");
                 lapTime.setText("0.0");
+
                 numOfLap.setText("Lap: "+Integer.toString(Lap));
                 test.setVisibility(View.VISIBLE);
                 yesButton.setVisibility(View.VISIBLE);
@@ -173,7 +173,6 @@ public class RunActivity extends AppCompatActivity{
                     timeR= "("+Integer.toString(Lap-1)+")-{"+String.format("%01d", Seconds2) + "." + String.format("%01d", MilliSeconds2/100)+"}";
                     if(Lap>1) {
                         list.add(timeR);
-
                         test.setText(list.toString());
                     }
 
@@ -181,9 +180,6 @@ public class RunActivity extends AppCompatActivity{
                 StartTime2=SystemClock.uptimeMillis();
             }
         });
-
-
-
 
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override

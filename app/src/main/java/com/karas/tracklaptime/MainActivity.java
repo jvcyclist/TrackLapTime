@@ -12,7 +12,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     Button databaseButton;
-
+    Button startButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Button startButton = findViewById(R.id.main_start_button);
+        startButton= findViewById(R.id.main_start_button);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,14 +31,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         databaseButton = findViewById(R.id.database_button);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         databaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
