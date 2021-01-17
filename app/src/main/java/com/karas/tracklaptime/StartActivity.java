@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+
+import org.w3c.dom.Text;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -21,14 +24,25 @@ public class StartActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.start_back_button);
         Button startButton = findViewById(R.id.start_start_button);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        CheckBox isSetLat = findViewById(R.id.are_set_laps_ch);
+        CheckBox isByk = findViewById(R.id.is_byk_ch);
+
+        final CheckBox checkBox = new CheckBox(this);
+
+
+
+        isByk.setOnClickListener(new View.OnClickListener(){
+
+
+          @Override
+          public void onClick(View v) {
+
+              checkBox.setText("siema");
+              setContentView(checkBox);
+          }
+      }
+
+        );
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

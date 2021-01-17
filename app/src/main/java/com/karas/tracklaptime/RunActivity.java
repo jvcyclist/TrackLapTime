@@ -28,30 +28,23 @@ import java.util.List;
 
 
 public class RunActivity extends AppCompatActivity{
-
     DatabaseHelper myDb;
-    static int counter=0;
     TextView fullTime,lapTime,numOfLap,test;
     Button start, pause, reset ,nextlap,noButton,yesButton;
-    String timeR,res;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime,MillisecondTime2,StartTime2,TimeBuff2,UpdateTime2 = 0L ;
-    String lastFullTime;
     Handler handler,handler2;
-
-    int Seconds, Minutes, MilliSeconds,Lap=0,lastLap ;
-    int Seconds2,Minutes2,MilliSeconds2;
-    int numofClick=0;
-    ArrayAdapter<String> adapter ;
+    TrackTimeService trackTimeService;
 
     List<String> list = new LinkedList<String>();
     DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
     String date;
     TextView quest_textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
 
+        trackTimeService = new TrackTimeService();
         myDb = new DatabaseHelper(this);
         fullTime = (TextView)findViewById(R.id.fullTime);
         lapTime = (TextView)findViewById(R.id.lapTime);
@@ -82,8 +75,8 @@ public class RunActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 list.clear();
-                StartTime = SystemClock.uptimeMillis();
-                StartTime2 = SystemClock.uptimeMillis();
+                trackTimeService.setStartTime(SystemClock.uptimeMillis());
+                trackTimeService.setStartTime2(SystemClock.uptimeMillis());
                 handler.postDelayed(runnable, 0);
                 test.setVisibility(View.INVISIBLE);
                 yesButton.setVisibility(View.INVISIBLE);
@@ -96,11 +89,8 @@ public class RunActivity extends AppCompatActivity{
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                TimeBuff += MillisecondTime;
-
+                trackTimeService.addTimeToPauseTimeBuff();
                 handler.removeCallbacks(runnable);
-
                 reset.setEnabled(true);
                 nextlap.setEnabled(false);
             }
@@ -109,30 +99,12 @@ public class RunActivity extends AppCompatActivity{
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MillisecondTime = 0L ;
-                StartTime = 0L ;
-                TimeBuff = 0L ;
-                UpdateTime = 0L ;
-                Seconds = 0 ;
-                Minutes = 0 ;
-                MilliSeconds = 0 ;
-                lastLap=Lap;
-                Lap=0;
-
-                MillisecondTime2 = 0L ;
-                StartTime2 = 0L ;
-                TimeBuff2 = 0L ;
-                UpdateTime2 = 0L ;
-                Seconds2 = 0 ;
-                Minutes2 = 0 ;
-                numofClick=0;
-
+                trackTimeService.reset();
                 nextlap.setEnabled(false);
-                lastFullTime=fullTime.getText().toString();
+               trackTimeService.setLastFullTime(fullTime.getText().toString());
                 fullTime.setText("00:00:00");
                 lapTime.setText("0.0");
-
-                numOfLap.setText("Lap: "+Integer.toString(Lap));
+                numOfLap.setText("Lap: "+Integer.toString(trackTimeService.getLap()));
                 test.setVisibility(View.VISIBLE);
                 yesButton.setVisibility(View.VISIBLE);
                 noButton.setVisibility(View.VISIBLE);
@@ -144,41 +116,43 @@ public class RunActivity extends AppCompatActivity{
         nextlap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Lap = Lap + 1;
-                numOfLap.setText("Lap: "+Integer.toString(Lap));
-
-                numofClick++;
-
-                if(numofClick==1){start.performClick();}
-
-                UpdateTime2=SystemClock.uptimeMillis()-StartTime2;
-
-                Seconds2 = (int) (UpdateTime2 / 1000);
-
-                Minutes2 = Seconds2 / 60;
-
-                Seconds2 = Seconds2 % 60;
-
-                MilliSeconds2 = (int) (UpdateTime2 % 1000);
-
-                if(Seconds2<15){lapTime.setTextColor(Color.rgb( 92, 254, 0));}
-                if(Seconds2>15){lapTime.setTextColor(Color.rgb( 255, 0, 4));}
-                if(Seconds2<=2){numofClick++;} else{numofClick=1;}
-                if(numofClick==3){pause.performClick();reset.performClick();lapTime.setText("0.0");}
-                else{
-
+                trackTimeService.incrementLaps();
+                numOfLap.setText("Lap: "+Integer.toString(trackTimeService.getLap()));
+                trackTimeService.incrementNumofClicks();
+                if(trackTimeService.getNumofClick() == 1) {
+                    start.performClick();
+                }
+                trackTimeService.setUpdateTime2(
+                        SystemClock.uptimeMillis()-trackTimeService.getStartTime2());
+                trackTimeService.setSeconds2((int) trackTimeService.getUpdateTime2() / 1000);
+                trackTimeService.setMinutes2(trackTimeService.getSeconds2() / 60);
+                trackTimeService.setSeconds2Mod60();
+                trackTimeService.setMilliSeconds2(
+                        (int) (trackTimeService.getUpdateTime2() % 1000));
+                if(trackTimeService.getSeconds2() < 15) {
+                    lapTime.setTextColor(Color.rgb( 92, 254, 0));
+                }
+                if(trackTimeService.getSeconds2() > 20) {
+                    lapTime.setTextColor(Color.rgb( 255, 0, 4));
+                }
+                if(trackTimeService.getSeconds2() <= 2) {
+                    trackTimeService.incrementNumofClicks();
+                } else{trackTimeService.setNumofClick(1);
+                }
+                if(trackTimeService.getNumofClick() == 3){
+                    pause.performClick();reset.performClick();
+                    lapTime.setText("0.0");
+                } else{
                     lapTime.setText(""
-                            + String.format("%01d", Seconds2) + "."
-                            + String.format("%01d", MilliSeconds2/100));
-
-                    timeR= "("+Integer.toString(Lap-1)+")-{"+String.format("%01d", Seconds2) + "." + String.format("%01d", MilliSeconds2/100)+"}";
-                    if(Lap>1) {
-                        list.add(timeR);
+                            + String.format("%01d", trackTimeService.getSeconds2()) + "."
+                            + String.format("%01d", trackTimeService.getMilliSeconds2()/100));
+                    trackTimeService.setTimeR("("+Integer.toString(trackTimeService.getLap()-1)+")-{"+String.format("%01d", trackTimeService.getSeconds2()) + "." + String.format("%01d", trackTimeService.getMilliSeconds2()/100)+"}");
+                    if(trackTimeService.getLap() > 1) {
+                        list.add(trackTimeService.getTimeR());
                         test.setText(list.toString());
                     }
-
                 }
-                StartTime2=SystemClock.uptimeMillis();
+                trackTimeService.setStartTime2(SystemClock.uptimeMillis());
             }
         });
 
@@ -187,7 +161,6 @@ public class RunActivity extends AppCompatActivity{
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),MainActivity.class);
                 startActivity(i);
-
             }
         });
 
@@ -199,7 +172,7 @@ public class RunActivity extends AppCompatActivity{
                     @Override
                     public void onClick(View v) {
                         boolean isInserted = myDb.insertData(date,
-                                Integer.toString(lastLap-2), lastFullTime,
+                                Integer.toString(trackTimeService.getLastLap()-2), trackTimeService.getLastFullTime(),
                                 test.getText().toString() );
                         if(isInserted == true)
                             Toast.makeText(RunActivity.this,"Data Inserted",Toast.LENGTH_LONG).show();
@@ -217,7 +190,7 @@ public class RunActivity extends AppCompatActivity{
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
-            start.setText(String.valueOf(numofClick));
+            start.setText(String.valueOf(trackTimeService.numofClick));
 
             nextlap.performClick();
             return true;
@@ -232,21 +205,11 @@ public class RunActivity extends AppCompatActivity{
 
         public void run() {
 
-            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+            trackTimeService.initialize();
 
-            UpdateTime = TimeBuff + MillisecondTime;
-
-            Seconds = (int) (UpdateTime / 1000);
-
-            Minutes = Seconds / 60;
-
-            Seconds = Seconds % 60;
-
-            MilliSeconds = (int) (UpdateTime % 1000);
-
-            fullTime.setText("" + Minutes + "."
-                    + String.format("%02d", Seconds) + "."
-                    + String.format("%03d", MilliSeconds));
+            fullTime.setText("" + trackTimeService.getMinutes() + "."
+                    + String.format("%02d", trackTimeService.getSeconds()) + "."
+                    + String.format("%03d", trackTimeService.getMilliSeconds()));
 
             handler.postDelayed(this, 0);
         }

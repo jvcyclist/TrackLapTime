@@ -17,33 +17,19 @@
         tools:layout_editor_absoluteY="8dp">
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/are_set_laps_ch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ustalon ilość okrążeń" />
 
-        <EditText
-            android:id="@+id/editTextNumber"
-            android:layout_width="63dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number" />
-
         <CheckBox
-            android:id="@+id/checkBox2"
+            android:id="@+id/is_byk_ch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Płachta na byka" />
 
         <EditText
             android:id="@+id/editTextNumber4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/editTextNumber3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
