@@ -30,7 +30,6 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,7 +38,6 @@ public class StartActivity extends AppCompatActivity {
 
             }
         });
-
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override

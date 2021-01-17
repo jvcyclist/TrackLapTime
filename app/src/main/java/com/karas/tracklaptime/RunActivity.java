@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.KeyEvent.Callback;
 import android.view.View;
@@ -215,7 +216,7 @@ public class RunActivity extends AppCompatActivity{
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
             start.setText(String.valueOf(numofClick));
 
             nextlap.performClick();
