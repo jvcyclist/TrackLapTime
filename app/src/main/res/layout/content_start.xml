@@ -16,24 +16,17 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <CheckBox
-            android:id="@+id/are_set_laps_ch"
+        <Switch
+            android:id="@+id/switch_lap_range"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ustalon ilość okrążeń" />
+            android:text="Ustalona ilość okrążeń" />
 
-        <CheckBox
-            android:id="@+id/is_byk_ch"
+        <Switch
+            android:id="@+id/switch_time_range"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Płachta na byka" />
-
-        <EditText
-            android:id="@+id/editTextNumber4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number" />
 
         <Button
             android:id="@+id/start_start_button"
@@ -46,6 +39,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="POWRÓT" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+" />
+
+            <EditText
+                android:id="@+id/editTextNumber4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="-" />
+
+            <LinearLayout
+                android:id="@+id/ll_laps_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

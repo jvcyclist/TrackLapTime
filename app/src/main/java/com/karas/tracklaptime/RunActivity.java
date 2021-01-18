@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,10 +22,13 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.DoubleStream;
 
 
 public class RunActivity extends AppCompatActivity{
@@ -38,11 +42,23 @@ public class RunActivity extends AppCompatActivity{
     DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
     String date;
     TextView quest_textView;
+    List<Double> lapsTime = new ArrayList<>();
+    int flag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+        flag = getIntent().getIntExtra("TIME",0);
+        if (flag == 1) {
+            double[] timesLapsdoubleArray = getIntent().getDoubleArrayExtra("LAPSTIME");
+            for (double tl : timesLapsdoubleArray){
+                lapsTime.add(Double.valueOf(tl));
+            }
+        }
+
+
 
         trackTimeService = new TrackTimeService();
         myDb = new DatabaseHelper(this);
@@ -56,6 +72,8 @@ public class RunActivity extends AppCompatActivity{
         pause = (Button)findViewById(R.id.stopbtn);
         reset = (Button)findViewById(R.id.resetbtn);
         nextlap = (Button)findViewById(R.id.nextLap);
+
+
 
         noButton = (Button)findViewById(R.id.run_no_button);
         yesButton = (Button)findViewById(R.id.run_yes_button);
@@ -129,10 +147,10 @@ public class RunActivity extends AppCompatActivity{
                 trackTimeService.setSeconds2Mod60();
                 trackTimeService.setMilliSeconds2(
                         (int) (trackTimeService.getUpdateTime2() % 1000));
-                if(trackTimeService.getSeconds2() < 15) {
+
+                if(!isTimeInRage(trackTimeService.getSeconds2(),lapsTime.get(trackTimeService.getLap()-1))) {
                     lapTime.setTextColor(Color.rgb( 92, 254, 0));
-                }
-                if(trackTimeService.getSeconds2() > 20) {
+                }else  {
                     lapTime.setTextColor(Color.rgb( 255, 0, 4));
                 }
                 if(trackTimeService.getSeconds2() <= 2) {
@@ -187,9 +205,22 @@ public class RunActivity extends AppCompatActivity{
 
     }
 
+    public boolean isTimeInRage(double time, double requiredTime){
+        double gap = 1.0;
+        if (requiredTime+gap <= time) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+     //   if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             start.setText(String.valueOf(trackTimeService.numofClick));
 
             nextlap.performClick();
@@ -215,5 +246,9 @@ public class RunActivity extends AppCompatActivity{
         }
 
     };
+
+
+
+
 
 }

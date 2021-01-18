@@ -9,6 +9,15 @@ public class TrackTimeService {
     int Seconds, Minutes, MilliSeconds,Lap=0,lastLap ;
     int Seconds2,Minutes2,MilliSeconds2;
     int numofClick=0;
+    int lapsToEnd=0;
+
+    public int getLapsToEnd() {
+        return lapsToEnd;
+    }
+
+    public void setLapsToEnd(int lapsToEnd) {
+        this.lapsToEnd = lapsToEnd;
+    }
 
     public void reset() {
         this.MillisecondTime = 0L ;
@@ -29,6 +38,7 @@ public class TrackTimeService {
         this.Seconds2 = 0 ;
         this.Minutes2 = 0 ;
         this.numofClick=0;
+        this.lapsToEnd=0;
     }
 
     public void initialize() {
@@ -57,10 +67,6 @@ public class TrackTimeService {
     public void addTimeToPauseTimeBuff() {
         this.TimeBuff += this.MillisecondTime;
     }
-
-
-
-
 
     public String getTimeR() {
         return timeR;
