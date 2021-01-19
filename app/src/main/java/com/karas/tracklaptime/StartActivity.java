@@ -18,18 +18,15 @@ import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
 
-    int numOfLaps=10;
+    int numOfLaps = 0;
     EditText editText;
     Button incrementLapsButton;
     Button decrementLapsButton;
     Switch switchLapRange;
     Switch switchTimeRange;
     LinearLayout linearLayoutLapsTime;
-    Button plus;
-    Button minus;
     EditText editText2;
     List<Double> timeLaps = new ArrayList<>();
-    double gap = 0.5;
     TextView textViewForLaps;
 
     @Override
@@ -131,6 +128,11 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent i = new Intent(getApplicationContext(),RunActivity.class);
+
+                if(switchLapRange.isChecked()){
+                    i.putExtra("LAP", numOfLaps);
+                }
+
                 if (switchTimeRange.isChecked()){
                     i.putExtra("TIME", 1);
                 }

@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         });
         databaseButton = findViewById(R.id.database_button);
 
-
         databaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

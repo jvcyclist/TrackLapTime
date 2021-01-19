@@ -55,6 +55,9 @@ public class TrackTimeService {
     public void incrementLaps() {
         this.Lap++;
     }
+    public void decrementLaps() {
+        this.Lap--;
+    }
 
     public void incrementNumofClicks() {
         numofClick++;
