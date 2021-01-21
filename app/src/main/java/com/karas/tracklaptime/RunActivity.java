@@ -31,12 +31,13 @@ public class RunActivity extends AppCompatActivity{
     TrackTimeService trackTimeService;
 
     int amountOfRounds;
-    List<String> list = new LinkedList<String>();
-    DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+    List<String> listTimeR = new LinkedList<String>();
+    DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
     String date;
     TextView quest_textView;
     List<Double> lapsTime = new ArrayList<>();
     int isRangeLapTime;
+    ResultFileMapper resultFileMapper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,15 +59,16 @@ public class RunActivity extends AppCompatActivity{
         numOfLap = (TextView)findViewById(R.id.numOfLap);
         test = (TextView) findViewById(R.id.test);
         test.setVisibility(View.INVISIBLE);
-        date= df.format(Calendar.getInstance().getTime());
+        date= dateFormat.format(Calendar.getInstance().getTime());
         start = (Button)findViewById(R.id.startbtn);
         pause = (Button)findViewById(R.id.stopbtn);
         reset = (Button)findViewById(R.id.resetbtn);
         nextlap = (Button)findViewById(R.id.nextLap);
+        resultFileMapper = new ResultFileMapper();
 
         if (amountOfRounds > 0) {
-            trackTimeService.setLap(amountOfRounds);
-            numOfLap.setText("Lap: " + trackTimeService.getLap());
+            trackTimeService.setCurrentLap(amountOfRounds);
+            numOfLap.setText("Lap: " + trackTimeService.getCurrentLap());
         }
 
         noButton = (Button)findViewById(R.id.run_no_button);
@@ -86,7 +88,7 @@ public class RunActivity extends AppCompatActivity{
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                list.clear();
+                listTimeR.clear();
                 trackTimeService.setStartTime(SystemClock.uptimeMillis());
                 trackTimeService.setStartTime2(SystemClock.uptimeMillis());
                 handler.postDelayed(runnable, 0);
@@ -116,7 +118,7 @@ public class RunActivity extends AppCompatActivity{
                trackTimeService.setLastFullTime(fullTime.getText().toString());
                 fullTime.setText("00:00:00");
                 lapTime.setText("0.0");
-                numOfLap.setText("Lap: "+Integer.toString(trackTimeService.getLap()));
+                numOfLap.setText("Lap: "+Integer.toString(trackTimeService.getCurrentLap()));
                 test.setVisibility(View.VISIBLE);
                 yesButton.setVisibility(View.VISIBLE);
                 noButton.setVisibility(View.VISIBLE);
@@ -130,12 +132,11 @@ public class RunActivity extends AppCompatActivity{
             public void onClick(View view) {
                 if(amountOfRounds > 0) {
                     trackTimeService.decrementLaps();
-
                 } else {
                     trackTimeService.incrementLaps();
                 }
 
-                numOfLap.setText("Lap: "+Integer.toString(trackTimeService.getLap()));
+                numOfLap.setText("Lap: "+Integer.toString(trackTimeService.getCurrentLap()));
                 trackTimeService.incrementNumofClicks();
                 if(trackTimeService.getNumofClick() == 1) {
                     start.performClick();
@@ -147,36 +148,39 @@ public class RunActivity extends AppCompatActivity{
                 trackTimeService.setSeconds2Mod60();
                 trackTimeService.setMilliSeconds2(
                 (int) (trackTimeService.getUpdateTime2() % 1000));
-                if(isRangeLapTime == 1) {
-                    if (!isTimeInRage(
-                            trackTimeService.getSeconds2(),
-                            lapsTime.get(amountOfRounds - trackTimeService.getLap() - 1))) {
-                        lapTime.setTextColor(Color.rgb(92, 254, 0));
-                    } else {
-                        lapTime.setTextColor(Color.rgb(255, 0, 4));
+
+                if(trackTimeService.getIteration()>1) {
+                    if (isRangeLapTime == 1) {
+                        if (!isTimeInRage(
+                                trackTimeService.getSeconds2(),
+                                lapsTime.get(trackTimeService.getIteration() - 2))) {
+                            lapTime.setTextColor(Color.rgb(92, 254, 0));
+                        } else {
+                            lapTime.setTextColor(Color.rgb(255, 0, 4));
+                        }
                     }
                 }
-
                 if(amountOfRounds > 0){
                     if(trackTimeService.getSeconds2() <= 2) {
                         trackTimeService.incrementNumofClicks();
 
                     } else{trackTimeService.setNumofClick(1);
                     }
-                    if((trackTimeService.getNumofClick() == 3)||(trackTimeService.getLap() == -1)){
+                    if((trackTimeService.getNumofClick() == 3)||(trackTimeService.getCurrentLap() == -1)){
                         if(amountOfRounds >0){
 
                             lapTime.setText(""
                                     + String.format("%01d", trackTimeService.getSeconds2()) + "."
                                     + String.format("%01d", trackTimeService.getMilliSeconds2()/100));
-                            trackTimeService.setTimeR("("+Integer.toString(amountOfRounds - 1 - trackTimeService.getLap())
+                            if(trackTimeService.getIteration()>1){ resultFileMapper.addGivenResult(Double.valueOf(lapTime.getText().toString()));}
+                            trackTimeService.setTimeR("("+Integer.toString(amountOfRounds - 1 - trackTimeService.getCurrentLap())
                                     + ")-{"+String.format("%01d", trackTimeService.getSeconds2())
                                     + "." + String.format("%01d", trackTimeService.getMilliSeconds2()/100)
                                     +"}");
-                            if(trackTimeService.getLap() > -2){
-                                list.remove(0);
-                                list.add(trackTimeService.getTimeR());
-                                test.setText(list.toString());
+                            if(trackTimeService.getCurrentLap() > -2){
+                                listTimeR.remove(0);
+                                listTimeR.add(trackTimeService.getTimeR());
+                                test.setText(listTimeR.toString());
                             }
 
                         }
@@ -187,13 +191,15 @@ public class RunActivity extends AppCompatActivity{
                         lapTime.setText(""
                                 + String.format("%01d", trackTimeService.getSeconds2()) + "."
                                 + String.format("%01d", trackTimeService.getMilliSeconds2()/100));
-                        trackTimeService.setTimeR("("+Integer.toString(amountOfRounds - 1 - trackTimeService.getLap())
+
+                        if(trackTimeService.getIteration()>1){ resultFileMapper.addGivenResult(Double.valueOf(lapTime.getText().toString()));}
+                        trackTimeService.setTimeR("("+Integer.toString(amountOfRounds - 1 - trackTimeService.getCurrentLap())
                                 + ")-{"+String.format("%01d", trackTimeService.getSeconds2())
                                 + "." + String.format("%01d", trackTimeService.getMilliSeconds2()/100)
                                 +"}");
-                        if(trackTimeService.getLap() > -2){
-                            list.add(trackTimeService.getTimeR());
-                            test.setText(list.toString());
+                        if(trackTimeService.getCurrentLap() > -2){
+                            listTimeR.add(trackTimeService.getTimeR());
+                            test.setText(listTimeR.toString());
                         }
                     }
                     trackTimeService.setStartTime2(SystemClock.uptimeMillis());
@@ -211,10 +217,10 @@ public class RunActivity extends AppCompatActivity{
                     lapTime.setText(""
                             + String.format("%01d", trackTimeService.getSeconds2()) + "."
                             + String.format("%01d", trackTimeService.getMilliSeconds2()/100));
-                    trackTimeService.setTimeR("("+Integer.toString(trackTimeService.getLap()-1)+")-{"+String.format("%01d", trackTimeService.getSeconds2()) + "." + String.format("%01d", trackTimeService.getMilliSeconds2()/100)+"}");
-                    if(trackTimeService.getLap() > 1) {
-                        list.add(trackTimeService.getTimeR());
-                        test.setText(list.toString());
+                    trackTimeService.setTimeR("("+Integer.toString(trackTimeService.getCurrentLap()-1)+")-{"+String.format("%01d", trackTimeService.getSeconds2()) + "." + String.format("%01d", trackTimeService.getMilliSeconds2()/100)+"}");
+                    if(trackTimeService.getCurrentLap() > 1) {
+                        listTimeR.add(trackTimeService.getTimeR());
+                        test.setText(listTimeR.toString());
                     }
                 }
                 trackTimeService.setStartTime2(SystemClock.uptimeMillis());
@@ -234,6 +240,7 @@ public class RunActivity extends AppCompatActivity{
 
     public  void AddData() {
         yesButton.setOnClickListener(
+
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -245,6 +252,12 @@ public class RunActivity extends AppCompatActivity{
                         else
                             Toast.makeText(RunActivity.this,"Data not Inserted",Toast.LENGTH_LONG).show();
 
+                        resultFileMapper.setFullTime(trackTimeService.getLastFullTime());
+                        if(lapsTime.size()>0){
+                        resultFileMapper.setExpectedResults(lapsTime);
+                        }
+
+                        resultFileMapper.test();
                         Intent i = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(i);
                     }

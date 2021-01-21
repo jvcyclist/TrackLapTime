@@ -6,7 +6,7 @@ public class TrackTimeService {
     String timeR;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime,MillisecondTime2,StartTime2,TimeBuff2,UpdateTime2 = 0L ;
     String lastFullTime;
-    int Seconds, Minutes, MilliSeconds,Lap=0,lastLap ;
+    int Seconds, Minutes, MilliSeconds, currentLap =0,lastLap, iteration=0 ;
     int Seconds2,Minutes2,MilliSeconds2;
     int numofClick=0;
     int lapsToEnd=0;
@@ -19,6 +19,21 @@ public class TrackTimeService {
         this.lapsToEnd = lapsToEnd;
     }
 
+
+
+    public void incrementIteration(){
+        this.iteration++;
+    }
+
+
+    public int getIteration() {
+        return iteration;
+    }
+
+    public void setIteration(int iteration) {
+        this.iteration = iteration;
+    }
+
     public void reset() {
         this.MillisecondTime = 0L ;
         this.StartTime = 0L ;
@@ -27,8 +42,8 @@ public class TrackTimeService {
         this.Seconds = 0 ;
         this.Minutes = 0 ;
         this.MilliSeconds = 0 ;
-        this.lastLap=Lap;
-        this.Lap=0;
+        this.lastLap= currentLap;
+        this.currentLap =0;
 
         this.MillisecondTime2 = 0L ;
         this.StartTime2 = 0L ;
@@ -53,10 +68,12 @@ public class TrackTimeService {
     }
 
     public void incrementLaps() {
-        this.Lap++;
+        incrementIteration();
+        this.currentLap++;
     }
     public void decrementLaps() {
-        this.Lap--;
+        incrementIteration();
+        this.currentLap--;
     }
 
     public void incrementNumofClicks() {
@@ -175,12 +192,12 @@ public class TrackTimeService {
         MilliSeconds = milliSeconds;
     }
 
-    public int getLap() {
-        return Lap;
+    public int getCurrentLap() {
+        return currentLap;
     }
 
-    public void setLap(int lap) {
-        Lap = lap;
+    public void setCurrentLap(int currentLap) {
+        this.currentLap = currentLap;
     }
 
     public int getLastLap() {

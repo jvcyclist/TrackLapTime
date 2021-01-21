@@ -18,7 +18,7 @@ import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
 
-    int numOfLaps = 0;
+    int numOfLaps = 4;
     EditText editText;
     Button incrementLapsButton;
     Button decrementLapsButton;
@@ -54,9 +54,7 @@ public class StartActivity extends AppCompatActivity {
         switchTimeRange.setVisibility(View.GONE);
 
         linearLayoutLapsTime = findViewById(R.id.ll_laps_time);
-
         editText2 = new EditText(this);
-
 
         switchTimeRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -65,15 +63,11 @@ public class StartActivity extends AppCompatActivity {
                     addEditTexts();
                     linearLayoutLapsTime.setVisibility(View.VISIBLE);
                 } else {
+                    linearLayoutLapsTime.removeAllViews();
                     linearLayoutLapsTime.setVisibility(View.GONE);
                 }
             }
         });
-
-
-
-
-
 
         switchLapRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -94,12 +88,10 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
-
-
         incrementLapsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                increment();
+                incrementNumOfLapsAndUpdateEditText();
             }
         });
 
@@ -109,10 +101,6 @@ public class StartActivity extends AppCompatActivity {
                 decrement();
             }
         });
-
-
-
-
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,17 +129,14 @@ public class StartActivity extends AppCompatActivity {
                     for (int j = 0; j < target.length; j++) {
                         target[j] = timeLaps.get(j);
                     }
-
                     i.putExtra("LAPSTIME", target);
                 }
                 startActivity(i);
-
             }
         });
-
     }
 
-    public void increment() {
+    public void incrementNumOfLapsAndUpdateEditText() {
         this.numOfLaps++;
        this.editText.setText(String.valueOf(numOfLaps));
     }
@@ -164,17 +149,17 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void addEditTexts(){
+        initLapsTime();
         for (int i = 0;i < numOfLaps; i++)
-        {   initLapsTime();
+        {
+
 
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-
-            TextView textView = new TextView(this);
-            textView.setId(50+i);
-            textView.setText(String.valueOf(i+1));
-
+            TextView indexOfExpectedTimeOfLap = new TextView(this);
+            indexOfExpectedTimeOfLap.setId(50+i);
+            indexOfExpectedTimeOfLap.setText(String.valueOf(i+1));
 
             final Button bplus = new Button(this);
             bplus.setId(100+i);
@@ -211,15 +196,15 @@ public class StartActivity extends AppCompatActivity {
                 }
             });
 
-            TextView textView1 = new TextView(this);
-            textView1.setId(300+i);
-            textView1.setText(String.valueOf(timeLaps.get(i)));
-            textView1.setLayoutParams(new LinearLayout.LayoutParams
+            TextView expectedTimeOfLapTextView = new TextView(this);
+            expectedTimeOfLapTextView.setId(300+i);
+            expectedTimeOfLapTextView.setText(String.valueOf(timeLaps.get(i)));
+            expectedTimeOfLapTextView.setLayoutParams(new LinearLayout.LayoutParams
                     (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT)
                            );
-            linearLayout.addView(textView);
+            linearLayout.addView(indexOfExpectedTimeOfLap);
             linearLayout.addView(bplus);
-            linearLayout.addView(textView1);
+            linearLayout.addView(expectedTimeOfLapTextView);
             linearLayout.addView(bminus);
 
            // linearLayout.setLayoutParams(new LinearLayout.LayoutParams
@@ -239,11 +224,27 @@ public class StartActivity extends AppCompatActivity {
 
         if (numOfLaps > 4){
             timeLaps.add(21.0);
-            for (int i = 1;i < numOfLaps; i++){
+            for (int i = 1;i < numOfLaps-1; i++){
              timeLaps.add(17.5);
             }
             timeLaps.add(16.5);
         }
+
+        if (numOfLaps == 3){
+            timeLaps.add(21.0);
+            timeLaps.add(18.5);
+            timeLaps.add(19.5);
+        }
+
+        if (numOfLaps == 2){
+            timeLaps.add(1.0);
+            timeLaps.add(18.5);
+        }
+
+        if (numOfLaps == 1){
+            timeLaps.add(20.5);
+        }
+
     }
 
 }
