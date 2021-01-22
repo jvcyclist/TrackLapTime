@@ -1,4 +1,4 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.subactivities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.karas.tracklaptime.MainActivity;
+import com.karas.tracklaptime.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,14 +101,14 @@ public class StartActivity extends AppCompatActivity {
         decrementLapsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                decrement();
+                decrementNumOfLapsAndUpdateEditText();
             }
         });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
 
             }
@@ -141,11 +144,11 @@ public class StartActivity extends AppCompatActivity {
        this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
     }
 
-    public void decrement() {
-        this.numOfLaps--;
-        this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
-        Log.println(1,"xd","siema");
-
+    public void decrementNumOfLapsAndUpdateEditText() {
+        if(numOfLaps > 1) {
+            this.numOfLaps--;
+            this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
+        }
     }
 
     public void addEditTexts(){

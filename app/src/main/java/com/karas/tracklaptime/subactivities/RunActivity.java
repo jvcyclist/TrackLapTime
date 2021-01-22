@@ -1,4 +1,4 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.subactivities;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -14,6 +14,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import android.widget.Toast;
+
+import com.karas.tracklaptime.MainActivity;
+import com.karas.tracklaptime.R;
+import com.karas.tracklaptime.utils.DatabaseHelper;
+import com.karas.tracklaptime.utils.FileSaver;
+import com.karas.tracklaptime.utils.ResultFileMapper;
+import com.karas.tracklaptime.utils.TrackTimeService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -37,7 +44,7 @@ public class RunActivity extends AppCompatActivity{
     String date;
     TextView quest_textView;
     List<Double> lapsTime = new ArrayList<>();
-    int isRangeLapTime;
+    int isRangeLapTimeFlag;
     ResultFileMapper resultFileMapper;
 
 
@@ -52,9 +59,9 @@ public class RunActivity extends AppCompatActivity{
         fileSaver = new FileSaver();
 
         amountOfRounds = getIntent().getIntExtra("LAP",0);
-        isRangeLapTime = getIntent().getIntExtra("TIME",0);
+        isRangeLapTimeFlag = getIntent().getIntExtra("TIME",0);
 
-        if (isRangeLapTime == 1) {
+        if (isRangeLapTimeFlag == 1) {
             double[] timesLapDoubleArray = getIntent().getDoubleArrayExtra("LAPSTIME");
             for (double tl : timesLapDoubleArray){
                 lapsTime.add(Double.valueOf(tl));
@@ -158,7 +165,7 @@ public class RunActivity extends AppCompatActivity{
                 (int) (trackTimeService.getUpdateTime2() % 1000));
 
                 if(trackTimeService.getIteration()>1) {
-                    if (isRangeLapTime == 1) {
+                    if (isRangeLapTimeFlag == 1) {
                         if (!isTimeInRage(
                                 trackTimeService.getSeconds2(),
                                 lapsTime.get(trackTimeService.getIteration() - 2))) {
@@ -239,7 +246,7 @@ public class RunActivity extends AppCompatActivity{
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
             }
         });
@@ -289,9 +296,8 @@ public class RunActivity extends AppCompatActivity{
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        ;
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
-            start.setText(String.valueOf(trackTimeService.numofClick));
+            start.setText(String.valueOf(trackTimeService.getNumofClick()));
 
             nextlap.performClick();
             return true;

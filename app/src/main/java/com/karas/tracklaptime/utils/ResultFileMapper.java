@@ -1,4 +1,4 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.utils;
 
 import android.text.TextUtils;
 
@@ -8,7 +8,8 @@ import java.util.List;
 
 public class ResultFileMapper {
 
-    private List<Integer> amountOfLaps = new ArrayList<>();
+    private final static String DELIMITER = ",";
+
     private List<Double> expectedResults = new ArrayList<>();
     private List<Double> givenResults = new ArrayList<>();
 
@@ -20,17 +21,8 @@ public class ResultFileMapper {
     private String secondLineFile;
     private String thirdLineFile;
 
-
-
-    private String fullTextFileContent;
     private String fullTime;
     private String timeStamp;
-
-
-    public String getTimeStamp(){
-        return this.timeStamp;
-    }
-
 
     public ResultFileMapper(){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -41,21 +33,21 @@ public class ResultFileMapper {
         createFirstRow();
         createSecondRow();
         createThirdRow();
-        firstLineFile = TextUtils.join(",", this.firstRowList);
-        secondLineFile = TextUtils.join(",", this.secondRowList);
-        thirdLineFile = TextUtils.join(",", this.thirdRowList);
+        firstLineFile = TextUtils.join(DELIMITER, this.firstRowList);
+        secondLineFile = TextUtils.join(DELIMITER, this.secondRowList);
+        thirdLineFile = TextUtils.join(DELIMITER, this.thirdRowList);
         return firstLineFile + "\r\n" + secondLineFile + "\r\n" + thirdLineFile + "\r\n";
     }
 
     public String getFileName(){
-        return this.timeStamp.replace("-","")
+        return this.timeStamp
+                .replace("-","")
                 .replace(" ","_")
                 .replace(":","")
-                .replace(".","") +"_TRACK_CYCLING"+ ".csv";
+                .replace(".","")
+                +"_TRACK_CYCLING"
+                + ".csv";
     }
-
-
-
 
     public void setFullTime(String fullTime){
         this.fullTime = fullTime;
@@ -75,11 +67,16 @@ public class ResultFileMapper {
         this.secondRowList.add(timeStamp);
         this.secondRowList.add("ZALOZENIA");
         this.secondRowList.add(" ");
-        for (Double expectedResult: expectedResults
-             ) {
-            secondRowList.add(String.valueOf(expectedResult));
+        if(expectedResults.size() > 0) {
+            for (Double expectedResult : expectedResults
+            ) {
+                secondRowList.add(String.valueOf(expectedResult));
+            }
+        }else {
+            for(int i = 1; i <= givenResults.size(); i++){
+                expectedResults.add(0.0);
+            }
         }
-
     }
 
     private void createThirdRow(){

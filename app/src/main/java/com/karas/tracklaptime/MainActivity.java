@@ -2,12 +2,13 @@ package com.karas.tracklaptime;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+
+import com.karas.tracklaptime.subactivities.DatabaseActivity;
+import com.karas.tracklaptime.subactivities.StartActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent myIntent;
-                myIntent = new Intent(MainActivity.this,StartActivity.class);
+                myIntent = new Intent(MainActivity.this, StartActivity.class);
                 MainActivity.this.startActivity(myIntent);
 
             }
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent myIntent;
-                myIntent = new Intent(MainActivity.this,DatabaseActivity.class);
+                myIntent = new Intent(MainActivity.this, DatabaseActivity.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });

@@ -1,15 +1,15 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.utils;
 
 import android.os.SystemClock;
 
 public class TrackTimeService {
-    String timeR;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime,MillisecondTime2,StartTime2,TimeBuff2,UpdateTime2 = 0L ;
-    String lastFullTime;
-    int Seconds, Minutes, MilliSeconds, currentLap =0,lastLap, iteration=0 ;
-    int Seconds2,Minutes2,MilliSeconds2;
-    int numofClick=0;
-    int lapsToEnd=0;
+    private String timeR;
+    private long millisecondTime, startTime, timeBuff, updateTime, millisecondTime2, startTime2, timeBuff2, updateTime2 = 0L ;
+    private String lastFullTime;
+    private int seconds, minutes, milliSeconds, currentLap =0,lastLap, iteration=0 ;
+    private int seconds2, minutes2, milliSeconds2;
+    private int numofClick=0;
+    private int lapsToEnd=0;
 
     public int getLapsToEnd() {
         return lapsToEnd;
@@ -18,8 +18,6 @@ public class TrackTimeService {
     public void setLapsToEnd(int lapsToEnd) {
         this.lapsToEnd = lapsToEnd;
     }
-
-
 
     public void incrementIteration(){
         this.iteration++;
@@ -35,35 +33,35 @@ public class TrackTimeService {
     }
 
     public void reset() {
-        this.MillisecondTime = 0L ;
-        this.StartTime = 0L ;
-        this.TimeBuff = 0L ;
-        this.UpdateTime = 0L ;
-        this.Seconds = 0 ;
-        this.Minutes = 0 ;
-        this.MilliSeconds = 0 ;
+        this.millisecondTime = 0L ;
+        this.startTime = 0L ;
+        this.timeBuff = 0L ;
+        this.updateTime = 0L ;
+        this.seconds = 0 ;
+        this.minutes = 0 ;
+        this.milliSeconds = 0 ;
         this.lastLap= currentLap;
         this.currentLap =0;
 
-        this.MillisecondTime2 = 0L ;
-        this.StartTime2 = 0L ;
-        this.TimeBuff2 = 0L ;
-        this.UpdateTime2 = 0L ;
-        this.UpdateTime2 = 0L ;
-        this.Seconds2 = 0 ;
-        this.Minutes2 = 0 ;
-        this.numofClick=0;
-        this.lapsToEnd=0;
+        this.millisecondTime2 = 0L ;
+        this.startTime2 = 0L ;
+        this.timeBuff2 = 0L ;
+        this.updateTime2 = 0L ;
+        this.updateTime2 = 0L ;
+        this.seconds2 = 0 ;
+        this.minutes2 = 0 ;
+        this.numofClick = 0;
+        this.lapsToEnd = 0;
     }
 
     public void initialize() {
-        this.MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+        this.millisecondTime = SystemClock.uptimeMillis() - startTime;
 
-        this.UpdateTime = TimeBuff + MillisecondTime;
-        this.Seconds = (int) (UpdateTime / 1000);
-        this.Minutes = Seconds / 60;
-        this.Seconds = Seconds % 60;
-        this.MilliSeconds = (int) (UpdateTime % 1000);
+        this.updateTime = timeBuff + millisecondTime;
+        this.seconds = (int) (updateTime / 1000);
+        this.minutes = seconds / 60;
+        this.seconds = seconds % 60;
+        this.milliSeconds = (int) (updateTime % 1000);
 
     }
 
@@ -80,12 +78,12 @@ public class TrackTimeService {
         numofClick++;
     }
 
-    public void setSeconds2Mod60(){
-        this.Seconds2 = this.Seconds2 % 60;
+    public void setSeconds2Mod60() {
+        this.seconds2 = this.seconds2 % 60;
     }
 
     public void addTimeToPauseTimeBuff() {
-        this.TimeBuff += this.MillisecondTime;
+    this.timeBuff += this.millisecondTime;
     }
 
     public String getTimeR() {
@@ -97,67 +95,67 @@ public class TrackTimeService {
     }
 
     public long getMillisecondTime() {
-        return MillisecondTime;
+        return millisecondTime;
     }
 
     public void setMillisecondTime(long millisecondTime) {
-        MillisecondTime = millisecondTime;
+        this.millisecondTime = millisecondTime;
     }
 
     public long getStartTime() {
-        return StartTime;
+        return startTime;
     }
 
     public void setStartTime(long startTime) {
-        StartTime = startTime;
+        this.startTime = startTime;
     }
 
     public long getTimeBuff() {
-        return TimeBuff;
+        return timeBuff;
     }
 
     public void setTimeBuff(long timeBuff) {
-        TimeBuff = timeBuff;
+        this.timeBuff = timeBuff;
     }
 
     public long getUpdateTime() {
-        return UpdateTime;
+        return updateTime;
     }
 
     public void setUpdateTime(long updateTime) {
-        UpdateTime = updateTime;
+        this.updateTime = updateTime;
     }
 
     public long getMillisecondTime2() {
-        return MillisecondTime2;
+        return millisecondTime2;
     }
 
     public void setMillisecondTime2(long millisecondTime2) {
-        MillisecondTime2 = millisecondTime2;
+        this.millisecondTime2 = millisecondTime2;
     }
 
     public long getStartTime2() {
-        return StartTime2;
+        return startTime2;
     }
 
     public void setStartTime2(long startTime2) {
-        StartTime2 = startTime2;
+        this.startTime2 = startTime2;
     }
 
     public long getTimeBuff2() {
-        return TimeBuff2;
+        return timeBuff2;
     }
 
     public void setTimeBuff2(long timeBuff2) {
-        TimeBuff2 = timeBuff2;
+        this.timeBuff2 = timeBuff2;
     }
 
     public long getUpdateTime2() {
-        return UpdateTime2;
+        return updateTime2;
     }
 
     public void setUpdateTime2(long updateTime2) {
-        UpdateTime2 = updateTime2;
+        this.updateTime2 = updateTime2;
     }
 
     public String getLastFullTime() {
@@ -169,27 +167,27 @@ public class TrackTimeService {
     }
 
     public int getSeconds() {
-        return Seconds;
+        return seconds;
     }
 
     public void setSeconds(int seconds) {
-        Seconds = seconds;
+        this.seconds = seconds;
     }
 
     public int getMinutes() {
-        return Minutes;
+        return minutes;
     }
 
     public void setMinutes(int minutes) {
-        Minutes = minutes;
+        this.minutes = minutes;
     }
 
     public int getMilliSeconds() {
-        return MilliSeconds;
+        return milliSeconds;
     }
 
     public void setMilliSeconds(int milliSeconds) {
-        MilliSeconds = milliSeconds;
+        this.milliSeconds = milliSeconds;
     }
 
     public int getCurrentLap() {
@@ -209,27 +207,28 @@ public class TrackTimeService {
     }
 
     public int getSeconds2() {
-        return Seconds2;
+        return seconds2;
     }
 
     public void setSeconds2(int seconds2) {
-        Seconds2 = seconds2;
+        this.seconds2 = seconds2;
     }
 
     public int getMinutes2() {
-        return Minutes2;
+        return minutes2;
     }
 
     public void setMinutes2(int minutes2) {
-        Minutes2 = minutes2;
+        this.minutes2 = minutes2;
     }
 
     public int getMilliSeconds2() {
-        return MilliSeconds2;
+
+        return milliSeconds2;
     }
 
     public void setMilliSeconds2(int milliSeconds2) {
-        MilliSeconds2 = milliSeconds2;
+        this.milliSeconds2 = milliSeconds2;
     }
 
     public int getNumofClick() {

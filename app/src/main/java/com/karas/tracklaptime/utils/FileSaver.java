@@ -1,4 +1,4 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.utils;
 
 import android.content.Context;
 import android.os.Build;
@@ -30,8 +30,6 @@ public class FileSaver {
             } finally {
                 stream.close();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

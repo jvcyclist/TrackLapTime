@@ -1,17 +1,12 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.subactivities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
@@ -21,6 +16,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.karas.tracklaptime.MainActivity;
+import com.karas.tracklaptime.R;
+import com.karas.tracklaptime.utils.DatabaseHelper;
 
 public class DatabaseActivity extends AppCompatActivity {
     DatabaseHelper myDb;
@@ -111,7 +110,7 @@ public class DatabaseActivity extends AppCompatActivity {
         backDatabaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
             }
         });

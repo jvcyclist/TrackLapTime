@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".StartActivity"
+            android:name=".subactivities.StartActivity"
             android:label="Start"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RunActivity"
+            android:name=".subactivities.RunActivity"
             android:label="@string/title_activity_run"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DatabaseActivity"
+            android:name=".subactivities.DatabaseActivity"
             android:label="Baza danych"
             android:theme="@style/AppTheme">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.karas.tracklaptime;
+package com.karas.tracklaptime.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
