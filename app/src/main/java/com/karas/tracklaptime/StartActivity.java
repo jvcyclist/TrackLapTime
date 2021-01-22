@@ -17,24 +17,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-
     int numOfLaps = 4;
-    EditText editText;
+    EditText numOfLapsEditText;
     Button incrementLapsButton;
     Button decrementLapsButton;
     Switch switchLapRange;
     Switch switchTimeRange;
     LinearLayout linearLayoutLapsTime;
-    EditText editText2;
     List<Double> timeLaps = new ArrayList<>();
     TextView textViewForLaps;
+    Toolbar mainToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        mainToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mainToolbar);
 
         Button backButton = findViewById(R.id.start_back_button);
         Button startButton = findViewById(R.id.start_start_button);
@@ -44,17 +44,17 @@ public class StartActivity extends AppCompatActivity {
 
         incrementLapsButton = findViewById(R.id.button3);
         incrementLapsButton.setVisibility(View.GONE);
-       // button3.setEnabled(true);
+
         decrementLapsButton = findViewById(R.id.button4);
         decrementLapsButton.setVisibility(View.GONE);
-      //  button4.setEnabled(true);
-        editText = findViewById(R.id.editTextNumber4);
-        editText.setText(String.valueOf(this.numOfLaps));
-        editText.setVisibility(View.GONE);
+
+        numOfLapsEditText = findViewById(R.id.editTextNumber4);
+        numOfLapsEditText.setText(String.valueOf(this.numOfLaps));
+        numOfLapsEditText.setVisibility(View.GONE);
+
         switchTimeRange.setVisibility(View.GONE);
 
         linearLayoutLapsTime = findViewById(R.id.ll_laps_time);
-        editText2 = new EditText(this);
 
         switchTimeRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -76,12 +76,12 @@ public class StartActivity extends AppCompatActivity {
                 if (isChecked) {
                     incrementLapsButton.setVisibility(View.VISIBLE);
                     decrementLapsButton.setVisibility(View.VISIBLE);
-                    editText.setVisibility(View.VISIBLE);
+                    numOfLapsEditText.setVisibility(View.VISIBLE);
                     switchTimeRange.setVisibility(View.VISIBLE);
                 } else {
                     incrementLapsButton.setVisibility(View.GONE);
                     decrementLapsButton.setVisibility(View.GONE);
-                    editText.setVisibility(View.GONE);
+                    numOfLapsEditText.setVisibility(View.GONE);
                     switchTimeRange.setVisibility(View.GONE);
                 }
 
@@ -138,12 +138,12 @@ public class StartActivity extends AppCompatActivity {
 
     public void incrementNumOfLapsAndUpdateEditText() {
         this.numOfLaps++;
-       this.editText.setText(String.valueOf(numOfLaps));
+       this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
     }
 
     public void decrement() {
         this.numOfLaps--;
-        this.editText.setText(String.valueOf(numOfLaps));
+        this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
         Log.println(1,"xd","siema");
 
     }

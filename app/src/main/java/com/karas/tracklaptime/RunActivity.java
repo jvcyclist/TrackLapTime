@@ -29,6 +29,7 @@ public class RunActivity extends AppCompatActivity{
     Button start, pause, reset ,nextlap,noButton,yesButton;
     Handler handler,handler2;
     TrackTimeService trackTimeService;
+    FileSaver fileSaver;
 
     int amountOfRounds;
     List<String> listTimeR = new LinkedList<String>();
@@ -38,17 +39,24 @@ public class RunActivity extends AppCompatActivity{
     List<Double> lapsTime = new ArrayList<>();
     int isRangeLapTime;
     ResultFileMapper resultFileMapper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         trackTimeService = new TrackTimeService();
+        resultFileMapper = new ResultFileMapper();
+        fileSaver = new FileSaver();
+
         amountOfRounds = getIntent().getIntExtra("LAP",0);
         isRangeLapTime = getIntent().getIntExtra("TIME",0);
 
         if (isRangeLapTime == 1) {
-            double[] timesLapsdoubleArray = getIntent().getDoubleArrayExtra("LAPSTIME");
-            for (double tl : timesLapsdoubleArray){
+            double[] timesLapDoubleArray = getIntent().getDoubleArrayExtra("LAPSTIME");
+            for (double tl : timesLapDoubleArray){
                 lapsTime.add(Double.valueOf(tl));
             }
         }
@@ -64,7 +72,7 @@ public class RunActivity extends AppCompatActivity{
         pause = (Button)findViewById(R.id.stopbtn);
         reset = (Button)findViewById(R.id.resetbtn);
         nextlap = (Button)findViewById(R.id.nextLap);
-        resultFileMapper = new ResultFileMapper();
+
 
         if (amountOfRounds > 0) {
             trackTimeService.setCurrentLap(amountOfRounds);
@@ -84,7 +92,7 @@ public class RunActivity extends AppCompatActivity{
         handler = new Handler() ;
         handler2 = new Handler();
         AddData();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,8 +264,12 @@ public class RunActivity extends AppCompatActivity{
                         if(lapsTime.size()>0){
                         resultFileMapper.setExpectedResults(lapsTime);
                         }
+                        //fileSaver.writeFileOnInternalStorage(getApplicationContext(), , resultFileMapper.getResultsAsCsvContent());
+                        fileSaver.writeToFile(resultFileMapper.getFileName(),resultFileMapper.getResultsAsCsvContent(), getApplicationContext());
+                        resultFileMapper.getResultsAsCsvContent();
 
-                        resultFileMapper.test();
+
+
                         Intent i = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(i);
                     }
