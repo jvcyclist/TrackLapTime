@@ -28,10 +28,11 @@ public class StartActivity extends AppCompatActivity {
     private LinearLayout linearLayoutLapsTime;
     private List<Double> timeLaps = new ArrayList<>();
     private TextView textViewForLaps;
-    private Toolbar mainToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Toolbar mainToolbar;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 

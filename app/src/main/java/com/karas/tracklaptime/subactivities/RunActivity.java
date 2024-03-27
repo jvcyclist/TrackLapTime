@@ -104,7 +104,7 @@ public class RunActivity extends AppCompatActivity {
         noButton.setVisibility(View.INVISIBLE);
         questTextView.setVisibility(View.INVISIBLE);
         handler = new Handler();
-        AddData();
+        addData();
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +158,7 @@ public class RunActivity extends AppCompatActivity {
                 }
 
                 numOfLap.setText("Lap: " + trackTimeService.getCurrentLap());
-                trackTimeService.incrementNumofClicks();
+                trackTimeService.incrementNumOfClicks();
                 if (trackTimeService.getNumofClick() == 1) {
                     start.performClick();
                 }
@@ -182,7 +182,7 @@ public class RunActivity extends AppCompatActivity {
                 }
                 if (amountOfRounds > 0) {
                     if (trackTimeService.getSeconds2() <= 2) {
-                        trackTimeService.incrementNumofClicks();
+                        trackTimeService.incrementNumOfClicks();
 
                     } else {
                         trackTimeService.setNumofClick(1);
@@ -231,7 +231,7 @@ public class RunActivity extends AppCompatActivity {
 
                 } else {
                     if (trackTimeService.getSeconds2() <= 2) {
-                        trackTimeService.incrementNumofClicks();
+                        trackTimeService.incrementNumOfClicks();
                     } else {
                         trackTimeService.setNumofClick(1);
                     }
@@ -265,7 +265,7 @@ public class RunActivity extends AppCompatActivity {
 
     }
 
-    public void AddData() {
+    public void addData() {
         yesButton.setOnClickListener(
 
                 new View.OnClickListener() {

@@ -27,7 +27,6 @@ public class DatabaseActivity extends AppCompatActivity {
 
     private Button deleteDatabaseButton;
 
-    Button deleteRow;
     EditText idText;
     TextView textView;
 

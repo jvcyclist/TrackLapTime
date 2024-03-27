@@ -8,28 +8,26 @@ import java.util.List;
 
 public class ResultFileMapper {
 
-    private final static String DELIMITER = ",";
-
+    private static final String DELIMITER = ",";
     private List<Double> expectedResults = new ArrayList<>();
     private List<Double> givenResults = new ArrayList<>();
+    private List<String> firstRowList = new ArrayList<>();
+    private List<String> secondRowList = new ArrayList<>();
+    private List<String> thirdRowList = new ArrayList<>();
 
-    private List<String> firstRowList = new ArrayList<>();;
-    private List<String> secondRowList = new ArrayList<>();;
-    private List<String> thirdRowList = new ArrayList<>();;
-
-    private String firstLineFile;
-    private String secondLineFile;
-    private String thirdLineFile;
 
     private String fullTime;
     private String timeStamp;
 
-    public ResultFileMapper(){
+    public ResultFileMapper() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.timeStamp =  timestamp.toString();
+        this.timeStamp = timestamp.toString();
     }
 
-    public String getResultsAsCsvContent(){
+    public String getResultsAsCsvContent() {
+        String thirdLineFile;
+        String secondLineFile;
+        String firstLineFile;
         createFirstRow();
         createSecondRow();
         createThirdRow();
@@ -39,66 +37,62 @@ public class ResultFileMapper {
         return firstLineFile + "\r\n" + secondLineFile + "\r\n" + thirdLineFile + "\r\n";
     }
 
-    public String getFileName(){
+    public String getFileName() {
         return this.timeStamp
-                .replace("-","")
-                .replace(" ","_")
-                .replace(":","")
-                .replace(".","")
-                +"_TRACK_CYCLING"
+                .replace("-", "")
+                .replace(" ", "_")
+                .replace(":", "")
+                .replace(".", "")
+                + "_TRACK_CYCLING"
                 + ".csv";
     }
 
-    public void setFullTime(String fullTime){
+    public void setFullTime(String fullTime) {
         this.fullTime = fullTime;
     }
 
-    private void createFirstRow(){
+    private void createFirstRow() {
         this.firstRowList.add(timeStamp);
         this.firstRowList.add("OKRAZENIE");
         this.firstRowList.add(" ");
-        for(int i = 1; i <= givenResults.size(); i++)
-        {
+        for (int i = 1; i <= givenResults.size(); i++) {
             this.firstRowList.add(String.valueOf(i));
         }
     }
 
-    private void createSecondRow(){
+    private void createSecondRow() {
         this.secondRowList.add(timeStamp);
         this.secondRowList.add("ZALOZENIA");
         this.secondRowList.add(" ");
-        if(expectedResults.size() > 0) {
+        if (!expectedResults.isEmpty()) {
             for (Double expectedResult : expectedResults
             ) {
                 secondRowList.add(String.valueOf(expectedResult));
             }
-        }else {
-            for(int i = 1; i <= givenResults.size(); i++){
+        } else {
+            for (int i = 1; i <= givenResults.size(); i++) {
                 expectedResults.add(0.0);
             }
         }
     }
 
-    private void createThirdRow(){
+    private void createThirdRow() {
         this.thirdRowList.add(timeStamp);
         this.thirdRowList.add("UZYSKANY CZAS");
         this.thirdRowList.add(fullTime);
-        for (Double givenResult: givenResults
+        for (Double givenResult : givenResults
         ) {
             thirdRowList.add(String.valueOf(givenResult));
         }
     }
 
-    public void setExpectedResults(List<Double> expectedResults){
+    public void setExpectedResults(List<Double> expectedResults) {
         this.expectedResults.addAll(expectedResults);
     }
 
     public void addGivenResult(Double result) {
         this.givenResults.add(result);
     }
-
-
-
 
 
 }
