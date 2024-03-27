@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -20,16 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-    int numOfLaps = 4;
-    EditText numOfLapsEditText;
-    Button incrementLapsButton;
-    Button decrementLapsButton;
-    Switch switchLapRange;
-    Switch switchTimeRange;
-    LinearLayout linearLayoutLapsTime;
-    List<Double> timeLaps = new ArrayList<>();
-    TextView textViewForLaps;
-    Toolbar mainToolbar;
+    private int numOfLaps = 4;
+    private EditText numOfLapsEditText;
+    private Button incrementLapsButton;
+    private Button decrementLapsButton;
+    private Switch switchLapRange;
+    private Switch switchTimeRange;
+    private LinearLayout linearLayoutLapsTime;
+    private List<Double> timeLaps = new ArrayList<>();
+    private TextView textViewForLaps;
+    private Toolbar mainToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,16 +117,16 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(getApplicationContext(),RunActivity.class);
+                Intent i = new Intent(getApplicationContext(), RunActivity.class);
 
-                if(switchLapRange.isChecked()){
+                if (switchLapRange.isChecked()) {
                     i.putExtra("LAP", numOfLaps);
                 }
 
-                if (switchTimeRange.isChecked()){
+                if (switchTimeRange.isChecked()) {
                     i.putExtra("TIME", 1);
                 }
-                if (timeLaps.size() > 0) {
+                if (!timeLaps.isEmpty()) {
                     double[] target = new double[timeLaps.size()];
                     for (int j = 0; j < target.length; j++) {
                         target[j] = timeLaps.get(j);
@@ -141,31 +140,30 @@ public class StartActivity extends AppCompatActivity {
 
     public void incrementNumOfLapsAndUpdateEditText() {
         this.numOfLaps++;
-       this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
+        this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
     }
 
     public void decrementNumOfLapsAndUpdateEditText() {
-        if(numOfLaps > 1) {
+        if (numOfLaps > 1) {
             this.numOfLaps--;
             this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
         }
     }
 
-    public void addEditTexts(){
+    public void addEditTexts() {
         initLapsTime();
-        for (int i = 0;i < numOfLaps; i++)
-        {
+        for (int i = 0; i < numOfLaps; i++) {
 
 
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
 
             TextView indexOfExpectedTimeOfLap = new TextView(this);
-            indexOfExpectedTimeOfLap.setId(50+i);
-            indexOfExpectedTimeOfLap.setText(String.valueOf(i+1));
+            indexOfExpectedTimeOfLap.setId(50 + i);
+            indexOfExpectedTimeOfLap.setText(String.valueOf(i + 1));
 
             final Button bplus = new Button(this);
-            bplus.setId(100+i);
+            bplus.setId(100 + i);
             bplus.setText("+");
             bplus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -173,17 +171,17 @@ public class StartActivity extends AppCompatActivity {
                     int id = bplus.getId();
                     id = id % 100;
 
-                    timeLaps.set(id,timeLaps.get(id)+0.1);
-                    textViewForLaps = findViewById(id+300);
+                    timeLaps.set(id, timeLaps.get(id) + 0.1);
+                    textViewForLaps = findViewById(id + 300);
 
                     textViewForLaps.setText(
-                            String.format("%-10.1f%n",timeLaps.get(id)));
+                            String.format("%-10.1f%n", timeLaps.get(id)));
 
                 }
             });
 
             final Button bminus = new Button(this);
-            bminus.setId(200+i);
+            bminus.setId(200 + i);
             bminus.setText("-");
             bminus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -191,60 +189,57 @@ public class StartActivity extends AppCompatActivity {
                     int id = bminus.getId();
                     id = id % 200;
 
-                    timeLaps.set(id,timeLaps.get(id)-0.1);
-                    textViewForLaps = findViewById(id+300);
+                    timeLaps.set(id, timeLaps.get(id) - 0.1);
+                    textViewForLaps = findViewById(id + 300);
 
                     textViewForLaps.setText(
-                            String.format("%-10.1f%n",timeLaps.get(id)));
+                            String.format("%-10.1f%n", timeLaps.get(id)));
                 }
             });
 
             TextView expectedTimeOfLapTextView = new TextView(this);
-            expectedTimeOfLapTextView.setId(300+i);
+            expectedTimeOfLapTextView.setId(300 + i);
             expectedTimeOfLapTextView.setText(String.valueOf(timeLaps.get(i)));
             expectedTimeOfLapTextView.setLayoutParams(new LinearLayout.LayoutParams
-                    (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT)
-                           );
+                    (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            );
             linearLayout.addView(indexOfExpectedTimeOfLap);
             linearLayout.addView(bplus);
             linearLayout.addView(expectedTimeOfLapTextView);
             linearLayout.addView(bminus);
 
-           // linearLayout.setLayoutParams(new LinearLayout.LayoutParams
-            // (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT));
-
             linearLayoutLapsTime.addView(linearLayout);
         }
     }
 
-    public void initLapsTime () {
-        if (numOfLaps == 4){
+    public void initLapsTime() {
+        if (numOfLaps == 4) {
             timeLaps.add(5.0);
             timeLaps.add(4.0);
             timeLaps.add(4.5);
             timeLaps.add(5.5);
         }
 
-        if (numOfLaps > 4){
+        if (numOfLaps > 4) {
             timeLaps.add(21.0);
-            for (int i = 1;i < numOfLaps-1; i++){
-             timeLaps.add(17.5);
+            for (int i = 1; i < numOfLaps - 1; i++) {
+                timeLaps.add(17.5);
             }
             timeLaps.add(16.5);
         }
 
-        if (numOfLaps == 3){
+        if (numOfLaps == 3) {
             timeLaps.add(21.0);
             timeLaps.add(18.5);
             timeLaps.add(19.5);
         }
 
-        if (numOfLaps == 2){
+        if (numOfLaps == 2) {
             timeLaps.add(1.0);
             timeLaps.add(18.5);
         }
 
-        if (numOfLaps == 1){
+        if (numOfLaps == 1) {
             timeLaps.add(20.5);
         }
 

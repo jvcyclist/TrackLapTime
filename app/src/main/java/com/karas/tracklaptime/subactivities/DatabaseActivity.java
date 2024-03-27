@@ -22,22 +22,22 @@ import com.karas.tracklaptime.R;
 import com.karas.tracklaptime.utils.DatabaseHelper;
 
 public class DatabaseActivity extends AppCompatActivity {
-    DatabaseHelper myDb;
+    private DatabaseHelper myDb;
 
-    TableLayout tableLayout;
-    Button backDatabaseButton;
-    Button deleteDatabaseButton;
+
+    private Button deleteDatabaseButton;
 
     Button deleteRow;
-    EditText IdText;
+    EditText idText;
     TextView textView;
 
-    int i=1;
-    private Context context;
+    int i = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Button backDatabaseButton;
+        TableLayout tableLayout;
         super.onCreate(savedInstanceState);
-        context=this;
         setContentView(R.layout.activity_database);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -46,21 +46,21 @@ public class DatabaseActivity extends AppCompatActivity {
 
         backDatabaseButton = findViewById(R.id.database_back_button);
 
-        deleteDatabaseButton= findViewById(R.id.dataase_delete_button);
+        deleteDatabaseButton = findViewById(R.id.dataase_delete_button);
 
-        IdText = findViewById(R.id.Idtext);
+        idText = findViewById(R.id.Idtext);
 
         textView = findViewById(R.id.textView);
 
         tableLayout = findViewById(R.id.tablelayout);
 
-        TableRow rowHeader = new TableRow(context);
+        TableRow rowHeader = new TableRow(this);
         rowHeader.setBackgroundColor(Color.parseColor("#c0c0c0"));
         rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
-        String[] headerText={"ID","DATA","ILOŚĆ OKR.","CZAS","CZASY"};
-        for(String c:headerText) {
+        String[] headerText = {"ID", "DATA", "ILOŚĆ OKR.", "CZAS", "CZASY"};
+        for (String c : headerText) {
             TextView tv = new TextView(this);
             tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
@@ -74,26 +74,30 @@ public class DatabaseActivity extends AppCompatActivity {
 
         Cursor res = myDb.getAllData();
 
-        if(res.getCount() >0)
-        {
+        if (res.getCount() > 0) {
             while (res.moveToNext()) {
                 // Read columns data
-                int ID= res.getInt(res.getColumnIndex("ID"));
-                String DATE = res.getString(res.getColumnIndex("DATE"));
-                String COUNT= res.getString(res.getColumnIndex("COUNT"));
-                String FULL_TIME = res.getString(res.getColumnIndex("FULL_TIME"));
-                String TIMES = res.getString(res.getColumnIndex("TIMES"));
+                int id = res.getInt(res.getColumnIndex("ID"));
+                String date = res.getString(res.getColumnIndex("DATE"));
+                String count = res.getString(res.getColumnIndex("COUNT"));
+                String fullTime = res.getString(res.getColumnIndex("FULL_TIME"));
+                String times = res.getString(res.getColumnIndex("TIMES"));
 
                 // data rows
-                TableRow row = new TableRow(context);
+                TableRow row = new TableRow(this);
                 row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
-                String[] colText={ID+"",DATE,COUNT,FULL_TIME,TIMES};
-                for(String text:colText) {
-                    TextView tv = new TextView(context);
-                    if(i==1){row.setBackgroundColor(Color.WHITE);i=-i;}
-                    else{row.setBackgroundColor(Color.LTGRAY);i=-i;}
-                                        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                String[] colText = {id + "", date, count, fullTime, times};
+                for (String text : colText) {
+                    TextView tv = new TextView(this);
+                    if (i == 1) {
+                        row.setBackgroundColor(Color.WHITE);
+                        i = -i;
+                    } else {
+                        row.setBackgroundColor(Color.LTGRAY);
+                        i = -i;
+                    }
+                    tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                             TableRow.LayoutParams.WRAP_CONTENT));
                     tv.setGravity(Gravity.CENTER);
                     tv.setTextSize(16);
@@ -110,20 +114,22 @@ public class DatabaseActivity extends AppCompatActivity {
         backDatabaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
 
         deleteDatabaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer deletedRows = myDb.deleteData(IdText.getText().toString());
-                if(deletedRows > 0)
-                {Toast.makeText(DatabaseActivity.this,"Data Deleted",Toast.LENGTH_LONG).show();finish();
-                    startActivity(getIntent());}
-                else
-                {Toast.makeText(DatabaseActivity.this,"Data not Deleted",Toast.LENGTH_LONG).show();}
+                Integer deletedRows = myDb.deleteData(idText.getText().toString());
+                if (deletedRows > 0) {
+                    Toast.makeText(DatabaseActivity.this, "Data Deleted", Toast.LENGTH_LONG).show();
+                    finish();
+                    startActivity(getIntent());
+                } else {
+                    Toast.makeText(DatabaseActivity.this, "Data not Deleted", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -134,24 +140,24 @@ public class DatabaseActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Integer deletedRows= myDb.deleteData(IdText.getText().toString());
-                        if(deletedRows > 0){
-                            Toast.makeText(DatabaseActivity.this,"Data Deleted",Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(getApplicationContext(),DatabaseActivity.class);
-                            startActivity(i);
+                        Integer deletedRows = myDb.deleteData(idText.getText().toString());
+                        if (deletedRows > 0) {
+                            Toast.makeText(DatabaseActivity.this, "Data Deleted", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(DatabaseActivity.this, "Data not Deleted", Toast.LENGTH_LONG).show();
                         }
-                        else{
-                            Toast.makeText(DatabaseActivity.this,"Data not Deleted",Toast.LENGTH_LONG).show();}
                     }
                 }
         );
     }
 
-    public void showMessage(String title,String Message){
+    public void showMessage(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle(title);
-        builder.setMessage(Message);
+        builder.setMessage(message);
         builder.show();
     }
 
