@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class TrackTimeService {
     private String timeR;
+    private String lastFullTime;
+
     private long millisecondTime;
     private long startTime;
     private long timeBuff;
@@ -17,7 +19,6 @@ public class TrackTimeService {
     private long startTime2;
     private long timeBuff2;
     private long updateTime2 = 0L;
-    private String lastFullTime;
     private int seconds;
     private int minutes;
     private int milliSeconds;

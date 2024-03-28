@@ -58,8 +58,7 @@ public class RunActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_run);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setupViewAndOrientation();
 
         trackTimeService = new TrackTimeService();
         resultFileMapper = new ResultFileMapper();
@@ -75,35 +74,17 @@ public class RunActivity extends AppCompatActivity {
             }
         }
 
-        myDb = new DatabaseHelper(this);
-        fullTime = (TextView) findViewById(R.id.fullTime);
-        lapTime = (TextView) findViewById(R.id.lapTime);
-        numOfLap = (TextView) findViewById(R.id.numOfLap);
-        test = (TextView) findViewById(R.id.test);
-        test.setVisibility(View.INVISIBLE);
-        date = dateFormat.format(Calendar.getInstance().getTime());
-        start = (Button) findViewById(R.id.startbtn);
-        pause = (Button) findViewById(R.id.stopbtn);
-        reset = (Button) findViewById(R.id.resetbtn);
-        nextLap = (Button) findViewById(R.id.nextLap);
 
+        myDb = new DatabaseHelper(this);
+        date = dateFormat.format(Calendar.getInstance().getTime());
+
+        initializeViews();
 
         if (amountOfRounds > 0) {
             trackTimeService.setCurrentLap(amountOfRounds);
             numOfLap.setText("Lap: " + trackTimeService.getCurrentLap());
         }
 
-        noButton = (Button) findViewById(R.id.run_no_button);
-        yesButton = (Button) findViewById(R.id.run_yes_button);
-        questTextView = findViewById(R.id.quest_textView);
-        nextLap.setVisibility(View.INVISIBLE);
-        start.setVisibility(View.INVISIBLE);
-        pause.setVisibility(View.INVISIBLE);
-        reset.setVisibility(View.INVISIBLE);
-        yesButton.setVisibility(View.INVISIBLE);
-        noButton.setVisibility(View.INVISIBLE);
-        questTextView.setVisibility(View.INVISIBLE);
-        handler = new Handler();
         addData();
 
         start.setOnClickListener(new View.OnClickListener() {
@@ -265,6 +246,35 @@ public class RunActivity extends AppCompatActivity {
 
     }
 
+    private void setupViewAndOrientation() {
+        setContentView(R.layout.activity_run);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    private void initializeViews() {
+        fullTime = findViewById(R.id.fullTime);
+        lapTime = findViewById(R.id.lapTime);
+        numOfLap = findViewById(R.id.numOfLap);
+        test = findViewById(R.id.test);
+        test.setVisibility(View.INVISIBLE);
+
+        start = findViewById(R.id.startbtn);
+        pause = findViewById(R.id.stopbtn);
+        reset = findViewById(R.id.resetbtn);
+        nextLap = findViewById(R.id.nextLap);
+        noButton = findViewById(R.id.run_no_button);
+        yesButton = findViewById(R.id.run_yes_button);
+        questTextView = findViewById(R.id.quest_textView);
+        nextLap.setVisibility(View.INVISIBLE);
+        start.setVisibility(View.INVISIBLE);
+        pause.setVisibility(View.INVISIBLE);
+        reset.setVisibility(View.INVISIBLE);
+        yesButton.setVisibility(View.INVISIBLE);
+        noButton.setVisibility(View.INVISIBLE);
+        questTextView.setVisibility(View.INVISIBLE);
+        handler = new Handler();
+    }
+
     public void addData() {
         yesButton.setOnClickListener(
 
@@ -286,7 +296,6 @@ public class RunActivity extends AppCompatActivity {
                         fileSaver.writeToFile(resultFileMapper.getFileName(), resultFileMapper.getResultsAsCsvContent(), getApplicationContext());
                         resultFileMapper.getResultsAsCsvContent();
 
-
                         Intent i = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(i);
                     }
@@ -300,6 +309,7 @@ public class RunActivity extends AppCompatActivity {
         return (requiredTime + gap) <= time;
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
             start.setText(String.valueOf(trackTimeService.getNumofClick()));

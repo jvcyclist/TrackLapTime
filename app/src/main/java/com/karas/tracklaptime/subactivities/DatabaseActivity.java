@@ -1,6 +1,5 @@
 package com.karas.tracklaptime.subactivities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,15 +21,16 @@ import com.karas.tracklaptime.R;
 import com.karas.tracklaptime.utils.DatabaseHelper;
 
 public class DatabaseActivity extends AppCompatActivity {
-    private DatabaseHelper myDb;
 
-
+    private static final String DELETED_ROW_MESSAGE = "Pozycja usunięta";
+    private static final String NOT_DELETED_ROW_MESSAGE = "Pozycja nie została usunięta";
+    private DatabaseHelper databaseHelper;
     private Button deleteDatabaseButton;
 
-    EditText idText;
+    EditText deleteIdButtonEditText;
     TextView textView;
 
-    int i = 1;
+    boolean someFlag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,14 @@ public class DatabaseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myDb = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(this);
 
         backDatabaseButton = findViewById(R.id.database_back_button);
 
         deleteDatabaseButton = findViewById(R.id.dataase_delete_button);
 
-        idText = findViewById(R.id.Idtext);
+        deleteIdButtonEditText = findViewById(R.id.Idtext);
+
 
         textView = findViewById(R.id.textView);
 
@@ -71,31 +72,30 @@ public class DatabaseActivity extends AppCompatActivity {
         }
         tableLayout.addView(rowHeader);
 
-        Cursor res = myDb.getAllData();
+        Cursor dbCursor = databaseHelper.getAllData();
 
-        if (res.getCount() > 0) {
-            while (res.moveToNext()) {
+        if (areThereSomeRows(dbCursor)) {
+            while (dbCursor.moveToNext()) {
                 // Read columns data
-                int id = res.getInt(res.getColumnIndex("ID"));
-                String date = res.getString(res.getColumnIndex("DATE"));
-                String count = res.getString(res.getColumnIndex("COUNT"));
-                String fullTime = res.getString(res.getColumnIndex("FULL_TIME"));
-                String times = res.getString(res.getColumnIndex("TIMES"));
+                int id = dbCursor.getInt(dbCursor.getColumnIndex("ID"));
+                String date = dbCursor.getString(dbCursor.getColumnIndex("DATE"));
+                String count = dbCursor.getString(dbCursor.getColumnIndex("COUNT"));
+                String fullTime = dbCursor.getString(dbCursor.getColumnIndex("FULL_TIME"));
+                String times = dbCursor.getString(dbCursor.getColumnIndex("TIMES"));
 
                 // data rows
                 TableRow row = new TableRow(this);
                 row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
-                String[] colText = {id + "", date, count, fullTime, times};
+                String[] colText = {id + date, count, fullTime, times};
                 for (String text : colText) {
                     TextView tv = new TextView(this);
-                    if (i == 1) {
+                    if (someFlag) {
                         row.setBackgroundColor(Color.WHITE);
-                        i = -i;
                     } else {
                         row.setBackgroundColor(Color.LTGRAY);
-                        i = -i;
                     }
+                    someFlag = !someFlag;
                     tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                             TableRow.LayoutParams.WRAP_CONTENT));
                     tv.setGravity(Gravity.CENTER);
@@ -108,6 +108,9 @@ public class DatabaseActivity extends AppCompatActivity {
 
             }
 
+        } else {
+            deleteIdButtonEditText.setVisibility(View.INVISIBLE);
+            deleteDatabaseButton.setVisibility(View.INVISIBLE);
         }
 
         backDatabaseButton.setOnClickListener(new View.OnClickListener() {
@@ -121,31 +124,35 @@ public class DatabaseActivity extends AppCompatActivity {
         deleteDatabaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer deletedRows = myDb.deleteData(idText.getText().toString());
+                Integer deletedRows = databaseHelper.deleteData(deleteIdButtonEditText.getText().toString());
                 if (deletedRows > 0) {
-                    Toast.makeText(DatabaseActivity.this, "Data Deleted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DatabaseActivity.this, DELETED_ROW_MESSAGE, Toast.LENGTH_LONG).show();
                     finish();
                     startActivity(getIntent());
                 } else {
-                    Toast.makeText(DatabaseActivity.this, "Data not Deleted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DatabaseActivity.this, NOT_DELETED_ROW_MESSAGE, Toast.LENGTH_LONG).show();
                 }
             }
         });
 
     }
 
-    public void DeleteData() {
+    private static boolean areThereSomeRows(Cursor dbCursor) {
+        return dbCursor.getCount() > 0;
+    }
+
+    public void deleteData() {
         deleteDatabaseButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Integer deletedRows = myDb.deleteData(idText.getText().toString());
+                        Integer deletedRows = databaseHelper.deleteData(deleteIdButtonEditText.getText().toString());
                         if (deletedRows > 0) {
-                            Toast.makeText(DatabaseActivity.this, "Data Deleted", Toast.LENGTH_LONG).show();
+                            Toast.makeText(DatabaseActivity.this, DELETED_ROW_MESSAGE, Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(DatabaseActivity.this, "Data not Deleted", Toast.LENGTH_LONG).show();
+                            Toast.makeText(DatabaseActivity.this, NOT_DELETED_ROW_MESSAGE, Toast.LENGTH_LONG).show();
                         }
                     }
                 }
