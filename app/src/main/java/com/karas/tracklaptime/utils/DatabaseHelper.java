@@ -20,7 +20,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, 1);
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,DATE TEXT,COUNT INTEGER,FULL_TIME TEXT,TIMES TEXT)");
@@ -31,7 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
-
 
     public boolean insertData(String date, String count, String fulltime, String times) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -45,14 +43,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllData() {
-        this.getWritableDatabase().rawQuery("select * from " + TABLE_NAME, null);
+        return this.getWritableDatabase().rawQuery("select * from " + TABLE_NAME, null);
     }
-
 
     public Integer deleteData(String id) {
         return this.getWritableDatabase().delete(TABLE_NAME, "ID = ?", new String[]{id});
     }
-
 
 }
 
