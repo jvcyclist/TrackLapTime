@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class RunActivity extends AppCompatActivity {
@@ -40,20 +42,21 @@ public class RunActivity extends AppCompatActivity {
     private Button pause;
     private Button reset;
     private Button nextLap;
-    private Button noButton;
-    private Button yesButton;
+    private Button doNotSaveResultsButton;
+    private Button saveResultsButton;
     private Handler handler;
     private TrackTimeService trackTimeService;
     private FileSaver fileSaver;
     private int amountOfRounds;
 
     private final List<String> listTimeR = new LinkedList<>();
-    private final DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+    private final DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_FORMAT, Locale.getDefault());
     private String date;
     private TextView questTextView;
     private final List<Double> lapsTime = new ArrayList<>();
     private int isRangeLapTimeFlag;
     private ResultFileMapper resultFileMapper;
+    private double tolerancy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class RunActivity extends AppCompatActivity {
         isRangeLapTimeFlag = getIntent().getIntExtra("TIME", 0);
 
         if (isRangeLapTimeFlag == 1) {
+            tolerancy = getIntent().getDoubleExtra("TOLERANCY", 0);
             double[] timesLapDoubleArray = getIntent().getDoubleArrayExtra("LAPSTIME");
             for (double tl : timesLapDoubleArray) {
                 lapsTime.add(tl);
@@ -82,7 +86,7 @@ public class RunActivity extends AppCompatActivity {
 
         if (amountOfRounds > 0) {
             trackTimeService.setCurrentLap(amountOfRounds);
-            numOfLap.setText("Lap: " + trackTimeService.getCurrentLap());
+            numOfLap.setText(String.format("Lap: %s", trackTimeService.getCurrentLap()));
         }
 
         addData();
@@ -95,8 +99,8 @@ public class RunActivity extends AppCompatActivity {
                 trackTimeService.setStartTime2(SystemClock.uptimeMillis());
                 handler.postDelayed(runnable, 0);
                 test.setVisibility(View.INVISIBLE);
-                yesButton.setVisibility(View.INVISIBLE);
-                noButton.setVisibility(View.INVISIBLE);
+                saveResultsButton.setVisibility(View.INVISIBLE);
+                doNotSaveResultsButton.setVisibility(View.INVISIBLE);
                 reset.setEnabled(false);
                 nextLap.setEnabled(true);
             }
@@ -122,8 +126,8 @@ public class RunActivity extends AppCompatActivity {
                 lapTime.setText("0.0");
                 numOfLap.setText("Lap: " + trackTimeService.getCurrentLap());
                 test.setVisibility(View.VISIBLE);
-                yesButton.setVisibility(View.VISIBLE);
-                noButton.setVisibility(View.VISIBLE);
+                saveResultsButton.setVisibility(View.VISIBLE);
+                doNotSaveResultsButton.setVisibility(View.VISIBLE);
                 questTextView.setVisibility(View.VISIBLE);
 
             }
@@ -152,14 +156,18 @@ public class RunActivity extends AppCompatActivity {
                         (int) (trackTimeService.getUpdateTime2() % 1000));
 
                 if (trackTimeService.getIteration() > 1 && (isRangeLapTimeFlag == 1)) {
-                        if (!isTimeInRage(
-                                trackTimeService.getSeconds2(),
-                                lapsTime.get(trackTimeService.getIteration() - 2))) {
-                            lapTime.setTextColor(Color.rgb(92, 254, 0));
-                        } else {
-                            lapTime.setTextColor(Color.rgb(255, 0, 4));
-                        }
-
+                    Log.d("TIMELAP_RECORDED",     Double.valueOf(String.format("%01d", trackTimeService.getSeconds2()) + "." + String.format("%01d", trackTimeService.getMilliSeconds2() / 100)).toString());
+                    Log.d("TIMELAP_EXPECTED",    lapsTime.get(trackTimeService.getIteration() - 2) + " seconds" );
+                    Log.d("TIMELAP_TOLERANCY",   tolerancy +"");
+                    if (isTimeInRage(
+                            Double.valueOf(String.format("%01d", trackTimeService.getSeconds2()) + "."
+                                    + String.format("%01d", trackTimeService.getMilliSeconds2() / 100)),
+                            lapsTime.get(trackTimeService.getIteration() - 2))
+                    ) {
+                        lapTime.setTextColor(Color.rgb(255, 0, 4));
+                    } else {
+                        lapTime.setTextColor(Color.rgb(92, 254, 0));
+                    }
                 }
                 if (amountOfRounds > 0) {
                     if (trackTimeService.getSeconds2() <= 2) {
@@ -236,7 +244,7 @@ public class RunActivity extends AppCompatActivity {
             }
         });
 
-        noButton.setOnClickListener(new View.OnClickListener() {
+        doNotSaveResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -252,31 +260,32 @@ public class RunActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        fullTime = findViewById(R.id.fullTime);
-        lapTime = findViewById(R.id.lapTime);
-        numOfLap = findViewById(R.id.numOfLap);
-        test = findViewById(R.id.test);
+        fullTime = findViewById(R.id.full_time_text);
+        lapTime = findViewById(R.id.lat_time_text);
+        numOfLap = findViewById(R.id.number_of_lap_text);
+        test = findViewById(R.id.save_result_background_view);
         test.setVisibility(View.INVISIBLE);
 
-        start = findViewById(R.id.startbtn);
-        pause = findViewById(R.id.stopbtn);
-        reset = findViewById(R.id.resetbtn);
-        nextLap = findViewById(R.id.nextLap);
-        noButton = findViewById(R.id.run_no_button);
-        yesButton = findViewById(R.id.run_yes_button);
-        questTextView = findViewById(R.id.quest_textView);
+        start = findViewById(R.id.start_ride_button);
+        pause = findViewById(R.id.stop_ride_button);
+        reset = findViewById(R.id.reset_ride_button);
+        nextLap = findViewById(R.id.next_lap_button);
+        doNotSaveResultsButton = findViewById(R.id.do_not_save_results_button);
+        saveResultsButton = findViewById(R.id.save_results_button);
+        questTextView = findViewById(R.id.save_result_text_view);
+
         nextLap.setVisibility(View.INVISIBLE);
         start.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
         reset.setVisibility(View.INVISIBLE);
-        yesButton.setVisibility(View.INVISIBLE);
-        noButton.setVisibility(View.INVISIBLE);
+        saveResultsButton.setVisibility(View.INVISIBLE);
+        doNotSaveResultsButton.setVisibility(View.INVISIBLE);
         questTextView.setVisibility(View.INVISIBLE);
         handler = new Handler();
     }
 
-    public void addData() {
-        yesButton.setOnClickListener(
+    private void addData() {
+        saveResultsButton.setOnClickListener(
 
                 new View.OnClickListener() {
                     @Override
@@ -304,9 +313,8 @@ public class RunActivity extends AppCompatActivity {
 
     }
 
-    public boolean isTimeInRage(double time, double requiredTime) {
-        double gap = 1.0;
-        return (requiredTime + gap) <= time;
+    private boolean isTimeInRage(double time, double requiredTime) {
+        return (requiredTime + tolerancy) <= time;
     }
 
     @Override

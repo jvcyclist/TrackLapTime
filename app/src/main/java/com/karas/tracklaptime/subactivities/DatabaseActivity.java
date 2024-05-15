@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -24,13 +23,11 @@ public class DatabaseActivity extends AppCompatActivity {
 
     private static final String DELETED_ROW_MESSAGE = "Pozycja usunięta";
     private static final String NOT_DELETED_ROW_MESSAGE = "Pozycja nie została usunięta";
+
     private DatabaseHelper databaseHelper;
     private Button deleteDatabaseButton;
-
-    EditText deleteIdButtonEditText;
-    TextView textView;
-
-    boolean someFlag = true;
+    private EditText deleteIdButtonEditText;
+    private boolean shouldRecordHaveWhiteBackground = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +47,6 @@ public class DatabaseActivity extends AppCompatActivity {
         deleteIdButtonEditText = findViewById(R.id.Idtext);
 
 
-        textView = findViewById(R.id.textView);
-
         tableLayout = findViewById(R.id.tablelayout);
 
         TableRow rowHeader = new TableRow(this);
@@ -60,15 +55,15 @@ public class DatabaseActivity extends AppCompatActivity {
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         String[] headerText = {"ID", "DATA", "ILOŚĆ OKR.", "CZAS", "CZASY"};
-        for (String c : headerText) {
-            TextView tv = new TextView(this);
-            tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+        for (String column : headerText) {
+            TextView textView = new TextView(this);
+            textView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                     TableRow.LayoutParams.WRAP_CONTENT));
-            tv.setGravity(Gravity.CENTER);
-            tv.setTextSize(18);
-            tv.setPadding(5, 5, 5, 5);
-            tv.setText(c);
-            rowHeader.addView(tv);
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextSize(18);
+            textView.setPadding(5, 5, 5, 5);
+            textView.setText(column);
+            rowHeader.addView(textView);
         }
         tableLayout.addView(rowHeader);
 
@@ -87,22 +82,22 @@ public class DatabaseActivity extends AppCompatActivity {
                 TableRow row = new TableRow(this);
                 row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
-                String[] colText = {id + date, count, fullTime, times};
-                for (String text : colText) {
-                    TextView tv = new TextView(this);
-                    if (someFlag) {
+                String[] timesDataRow = {id + date, count, fullTime, times};
+                for (String value : timesDataRow) {
+                    TextView textView = new TextView(this);
+                    if (shouldRecordHaveWhiteBackground) {
                         row.setBackgroundColor(Color.WHITE);
                     } else {
                         row.setBackgroundColor(Color.LTGRAY);
                     }
-                    someFlag = !someFlag;
-                    tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                    shouldRecordHaveWhiteBackground = !shouldRecordHaveWhiteBackground;
+                    textView.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
                             TableRow.LayoutParams.WRAP_CONTENT));
-                    tv.setGravity(Gravity.CENTER);
-                    tv.setTextSize(16);
-                    tv.setPadding(5, 5, 5, 5);
-                    tv.setText(text);
-                    row.addView(tv);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(16);
+                    textView.setPadding(5, 5, 5, 5);
+                    textView.setText(value);
+                    row.addView(textView);
                 }
                 tableLayout.addView(row);
 
@@ -139,32 +134,6 @@ public class DatabaseActivity extends AppCompatActivity {
 
     private static boolean areThereSomeRows(Cursor dbCursor) {
         return dbCursor.getCount() > 0;
-    }
-
-    public void deleteData() {
-        deleteDatabaseButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Integer deletedRows = databaseHelper.deleteData(deleteIdButtonEditText.getText().toString());
-                        if (deletedRows > 0) {
-                            Toast.makeText(DatabaseActivity.this, DELETED_ROW_MESSAGE, Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getApplicationContext(), DatabaseActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(DatabaseActivity.this, NOT_DELETED_ROW_MESSAGE, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-        );
-    }
-
-    public void showMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.show();
     }
 
 }

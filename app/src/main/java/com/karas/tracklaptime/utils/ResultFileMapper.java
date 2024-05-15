@@ -17,28 +17,27 @@ public class ResultFileMapper {
 
 
     private String fullTime;
-    private String timeStamp;
+    private String timestamp;
 
     public ResultFileMapper() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.timeStamp = timestamp.toString();
+        this.timestamp = timestamp.toString();
     }
 
     public String getResultsAsCsvContent() {
-        String thirdLineFile;
-        String secondLineFile;
-        String firstLineFile;
         createFirstRow();
         createSecondRow();
         createThirdRow();
-        firstLineFile = TextUtils.join(DELIMITER, this.firstRowList);
-        secondLineFile = TextUtils.join(DELIMITER, this.secondRowList);
-        thirdLineFile = TextUtils.join(DELIMITER, this.thirdRowList);
-        return firstLineFile + "\r\n" + secondLineFile + "\r\n" + thirdLineFile + "\r\n";
+        return TextUtils.join(DELIMITER, this.firstRowList)
+                + "\r\n"
+                + TextUtils.join(DELIMITER, this.secondRowList)
+                + "\r\n"
+                + TextUtils.join(DELIMITER, this.thirdRowList)
+                + "\r\n";
     }
 
     public String getFileName() {
-        return this.timeStamp
+        return this.timestamp
                 .replace("-", "")
                 .replace(" ", "_")
                 .replace(":", "")
@@ -52,7 +51,7 @@ public class ResultFileMapper {
     }
 
     private void createFirstRow() {
-        this.firstRowList.add(timeStamp);
+        this.firstRowList.add(timestamp);
         this.firstRowList.add("OKRAZENIE");
         this.firstRowList.add(" ");
         for (int i = 1; i <= givenResults.size(); i++) {
@@ -61,7 +60,7 @@ public class ResultFileMapper {
     }
 
     private void createSecondRow() {
-        this.secondRowList.add(timeStamp);
+        this.secondRowList.add(timestamp);
         this.secondRowList.add("ZALOZENIA");
         this.secondRowList.add(" ");
         if (!expectedResults.isEmpty()) {
@@ -77,7 +76,7 @@ public class ResultFileMapper {
     }
 
     private void createThirdRow() {
-        this.thirdRowList.add(timeStamp);
+        this.thirdRowList.add(timestamp);
         this.thirdRowList.add("UZYSKANY CZAS");
         this.thirdRowList.add(fullTime);
         for (Double givenResult : givenResults

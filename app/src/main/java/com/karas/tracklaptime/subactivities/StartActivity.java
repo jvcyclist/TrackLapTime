@@ -29,14 +29,13 @@ public class StartActivity extends AppCompatActivity {
     private List<Double> timeLaps = new ArrayList<>();
     private TextView textViewForLaps;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Toolbar mainToolbar;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        mainToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
 
         Button backButton = findViewById(R.id.start_back_button);
@@ -45,32 +44,19 @@ public class StartActivity extends AppCompatActivity {
         switchLapRange = findViewById(R.id.switch_lap_range);
         switchTimeRange = findViewById(R.id.switch_time_range);
 
-        incrementLapsButton = findViewById(R.id.button3);
+        incrementLapsButton = findViewById(R.id.increase_lap_amount_button);
         incrementLapsButton.setVisibility(View.GONE);
 
-        decrementLapsButton = findViewById(R.id.button4);
+        decrementLapsButton = findViewById(R.id.decrease_lap_amount_button);
         decrementLapsButton.setVisibility(View.GONE);
 
-        numOfLapsEditText = findViewById(R.id.editTextNumber4);
+        numOfLapsEditText = findViewById(R.id.lap_amount_text);
         numOfLapsEditText.setText(String.valueOf(this.numOfLaps));
         numOfLapsEditText.setVisibility(View.GONE);
 
         switchTimeRange.setVisibility(View.GONE);
 
         linearLayoutLapsTime = findViewById(R.id.ll_laps_time);
-
-        switchTimeRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    addEditTexts();
-                    linearLayoutLapsTime.setVisibility(View.VISIBLE);
-                } else {
-                    linearLayoutLapsTime.removeAllViews();
-                    linearLayoutLapsTime.setVisibility(View.GONE);
-                }
-            }
-        });
 
         switchLapRange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -118,34 +104,41 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(getApplicationContext(), RunActivity.class);
+                Intent intent ;
 
-                if (switchLapRange.isChecked()) {
-                    i.putExtra("LAP", numOfLaps);
+                if (switchLapRange.isChecked() && switchTimeRange.isChecked()) {
+                    intent = new Intent(getApplicationContext(), PreTimeRangeActivity.class);
+                    intent.putExtra("LAP", numOfLaps);
+                    intent.putExtra("TIME", 1);
+                } else {
+                    intent = new Intent(getApplicationContext(), RunActivity.class);
                 }
 
-                if (switchTimeRange.isChecked()) {
-                    i.putExtra("TIME", 1);
+                if (switchLapRange.isChecked()) {
+                    intent.putExtra("LAP", numOfLaps);
                 }
                 if (!timeLaps.isEmpty()) {
                     double[] target = new double[timeLaps.size()];
                     for (int j = 0; j < target.length; j++) {
                         target[j] = timeLaps.get(j);
                     }
-                    i.putExtra("LAPSTIME", target);
+                    intent.putExtra("LAPSTIME", target);
                 }
-                startActivity(i);
+                startActivity(intent);
             }
         });
     }
 
     public void incrementNumOfLapsAndUpdateEditText() {
-        this.numOfLaps++;
-        this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
+        if (numOfLaps < 42) {
+            this.numOfLaps++;
+            this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
+        }
+
     }
 
     public void decrementNumOfLapsAndUpdateEditText() {
-        if (numOfLaps > 1) {
+        if (numOfLaps > 4) {
             this.numOfLaps--;
             this.numOfLapsEditText.setText(String.valueOf(numOfLaps));
         }
@@ -154,8 +147,6 @@ public class StartActivity extends AppCompatActivity {
     public void addEditTexts() {
         initLapsTime();
         for (int i = 0; i < numOfLaps; i++) {
-
-
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
 

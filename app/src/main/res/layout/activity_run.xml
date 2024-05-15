@@ -11,7 +11,7 @@
     >
 
     <TextView
-        android:id="@+id/numOfLap"
+        android:id="@+id/number_of_lap_text"
         android:layout_width="128dp"
         android:layout_height="46dp"
         android:layout_marginTop="8dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/fullTime"
+        android:id="@+id/full_time_text"
         android:layout_width="151dp"
         android:layout_height="64dp"
         android:layout_marginStart="8dp"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/lapTime"
+        android:id="@+id/lat_time_text"
         android:layout_width="1043dp"
         android:layout_height="640dp"
         android:layout_marginStart="8dp"
@@ -56,7 +56,7 @@
         app:layout_constraintVertical_bias="0.846" />
 
     <Button
-        android:id="@+id/startbtn"
+        android:id="@+id/start_ride_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -67,7 +67,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/stopbtn"
+        android:id="@+id/stop_ride_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -77,11 +77,11 @@
         android:layout_marginBottom="8dp"
         android:text="stopbtn"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/resetbtn"
-        app:layout_constraintStart_toEndOf="@+id/startbtn" />
+        app:layout_constraintEnd_toStartOf="@+id/reset_ride_button"
+        app:layout_constraintStart_toEndOf="@+id/start_ride_button" />
 
     <Button
-        android:id="@+id/resetbtn"
+        android:id="@+id/reset_ride_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -92,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/nextLap"
+        android:id="@+id/next_lap_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
@@ -101,10 +101,10 @@
         android:text="NextLap"
         android:clickable = "false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numOfLap" />
+        app:layout_constraintTop_toBottomOf="@+id/number_of_lap_text" />
 
     <TextView
-        android:id="@+id/test"
+        android:id="@+id/save_result_background_view"
         android:layout_width="667dp"
         android:layout_height="339dp"
         android:layout_marginStart="140dp"
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/run_yes_button"
+        android:id="@+id/save_results_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -126,13 +126,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="TAK"
-        app:layout_constraintEnd_toStartOf="@+id/run_no_button"
+        app:layout_constraintEnd_toStartOf="@+id/do_not_save_results_button"
         app:layout_constraintHorizontal_bias="0.576"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/run_no_button"
+        android:id="@+id/do_not_save_results_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="340dp"
@@ -143,7 +143,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/quest_textView"
+        android:id="@+id/save_result_text_view"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
